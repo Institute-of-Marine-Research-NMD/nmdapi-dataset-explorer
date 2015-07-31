@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>no.imr.nmdapi.client.dao</groupId>
+    <artifactId>dataset-explorer</artifactId>
+     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>DAO module - DatasetExplorer</name>
+    <parent>
+       <groupId>no.imr.nmdapi.client</groupId>
+       <artifactId>dataset-explorer</artifactId>
+       <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+           <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+	<dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-core</artifactId>
+      </dependency>
+       <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+       </dependency>
+       <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+       </dependency>
+        <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-context</artifactId>
+       </dependency> 
+        <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-context-support</artifactId>
+       </dependency> 
+       
+        <dependency>
+            <groupId>no.imr.nmdapi.client.service</groupId>
+            <artifactId>nmdrest</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>no.imr.framework.logging.slf4j</groupId>
+            <artifactId>logging-framework</artifactId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>no.imr.nmdapi.generic</groupId>
+            <artifactId>exceptions</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>no.imr.nmdapi.generic</groupId>
+            <artifactId>nmdmission</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+
+	<dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-test</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.mockito</groupId>
+	  <artifactId>mockito-core</artifactId>
+	  <scope>test</scope>
+        </dependency>
+	<dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <scope>test</scope>
+	</dependency>
+             
+	
+    </dependencies>
+</project>

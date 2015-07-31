@@ -1,0 +1,28 @@
+#banner {
+}
+
+#s2dlogo {
+    float:right;
+}
+
+#browseTreeContainer {
+    width:200px;
+    float:left;
+}
+
+#browseTree {
+
+}
+
+#totalStatusContainer {
+    float:right;
+}
+
+/* Quick hack to get status message in right place*/
+#totalStatusMessage {
+    position: absolute;
+    top: 150px;
+   
+    
+}
+
