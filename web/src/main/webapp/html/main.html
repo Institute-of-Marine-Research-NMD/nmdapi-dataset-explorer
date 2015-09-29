@@ -1,16 +1,22 @@
 <html>
   <head>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
     <script src="../lib/jquery/jquery-1.11.2.min.js"></script>
 
     <link rel="stylesheet" href="../lib/jquery-ui/jquery-ui.min.css">
     <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../lib/jquery-blockUI/jquery.blockUI.js"></script>
 
     <link rel="stylesheet" href="../lib/jstree/themes/default/style.min.css" />
     <script src="../lib/jstree/jstree.min.js"></script>
     <script src="../lib/circliful/js/jquery.circliful.min.js"></script>
     <link href="../lib/circliful/css/jquery.circliful.css" rel="stylesheet" type="text/css" />
     <link href="../lib/circliful/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    
+
+     <link href="../lib/google-prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../lib/google-prettify/prettify.js"></script>
+    <script src="../lib/vkBeautify/vkBeautify.js"></script>
     <script src="../js/main.js"></script>
     <link rel="stylesheet" href="../css/main.css" />
     
@@ -29,6 +35,12 @@
       </span>
       
     </div>
+    
+    <div id="waitMessage" style="display:none;"> 
+   <img src="../img/wait.gif" />Retrieving data.
+</div> 
+    
+   
   </body>
   
 </html>

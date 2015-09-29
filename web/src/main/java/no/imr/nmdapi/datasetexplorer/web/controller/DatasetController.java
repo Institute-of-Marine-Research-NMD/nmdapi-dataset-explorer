@@ -25,7 +25,7 @@ public class DatasetController {
   
      private static final Logger LOGGER = LoggerFactory.getLogger(DatasetController.class);
     
-    @Autowired private DatasetService nmdRestService;
+    @Autowired private DatasetService datasetService;
        
     
     /**
@@ -40,6 +40,35 @@ public class DatasetController {
         return ("ping ");
        }
   
+    /**
+     * Simple mem stat
+     * 
+     * @return 
+     */
+    @RequestMapping("/mem")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String memStat() {
+    Runtime rt = Runtime.getRuntime();
+    long used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
+    return String.valueOf(used);
+}  
+    
+    /**
+     * Simple mem stat after gc
+     * 
+     * @return 
+     */
+    @RequestMapping("/gcmem")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String gcMemStat() {
+        System.gc();
+    Runtime rt = Runtime.getRuntime();
+    long used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
+    return String.valueOf(used);
+}  
+    
     /** 
      * *General exception handler
      * 
@@ -69,7 +98,7 @@ public class DatasetController {
     @ResponseBody
     public Object listDeliveries(@PathVariable(value = "missiontype") String missionType,
                 @PathVariable(value = "year") String year,@PathVariable(value = "platform") String platform) {
-        return nmdRestService.listDeliveries(missionType, year, platform);
+        return datasetService.listDeliveries(missionType, year, platform);
     }
     
     
@@ -85,7 +114,7 @@ public class DatasetController {
                 @PathVariable(value = "year") String year,
                 @PathVariable(value = "platform") String platform,
                 @PathVariable(value = "delivery") String delivery) {
-        return nmdRestService.listExistingDatasetsDetail(missionType, year, platform, delivery);
+        return datasetService.listExistingDatasetsDetail(missionType, year, platform, delivery);
     }
     
    /**
@@ -98,7 +127,7 @@ public class DatasetController {
     @ResponseBody
     public Object listPlatforms(@PathVariable(value = "missiontype") String missionType,
                 @PathVariable(value = "year") String year) {
-        return nmdRestService.listPlatforms(missionType, year);
+        return datasetService.listPlatforms(missionType, year);
     }
 
     /**
@@ -110,7 +139,7 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object listYears(@PathVariable(value = "missiontype") String missionType) {
-        return nmdRestService.listYears(missionType);
+        return datasetService.listYears(missionType);
     }
 
     /**
@@ -122,7 +151,7 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object listMissionTypes() {
-        return nmdRestService.listMissionTypes();
+        return datasetService.listMissionTypes();
     }
 
     
@@ -136,7 +165,7 @@ public class DatasetController {
     @ResponseBody
     public Object summarizeDelivery(@PathVariable(value = "missiontype") String missionType,
                 @PathVariable(value = "year") String year,@PathVariable(value = "platform") String platform) {
-        return nmdRestService.summarizePlatformDataSets(missionType, year, platform);
+        return datasetService.summarizePlatformDataSets(missionType, year, platform);
     }
    
     /**
@@ -149,7 +178,7 @@ public class DatasetController {
     @ResponseBody
     public Object summarizePlatform(@PathVariable(value = "missiontype") String missionType,
                 @PathVariable(value = "year") String year) {
-        return nmdRestService.summarizeYearDataSets(missionType, year);
+        return datasetService.summarizeYearDataSets(missionType, year);
     }
    
     /**
@@ -161,7 +190,21 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object summarizeMissionType(@PathVariable(value = "missiontype") String missionType) {
-        return nmdRestService.summarizeMissionTypeDataSets(missionType);
+        return datasetService.summarizeMissionTypeDataSets(missionType);
+    }
+    
+    
+    /**
+     * List cruises and their datasets for a year and mission type
+     *
+     * @return
+     */
+    @RequestMapping(value = "/summarizeByCruise/{missiontype}/{year}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object summarize(@PathVariable(value = "missiontype") String missionType,
+            @PathVariable(value = "year") String year) {
+        return datasetService.summarizeByCruise(missionType, year);
     }
     
    /**
@@ -173,7 +216,7 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object summarizeAll() {
-        return nmdRestService.summarizeAllDataSets();
+        return datasetService.summarizeAllDataSets();
     }
      
      
@@ -186,7 +229,7 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object countAll() {
-        return nmdRestService.countAllDataSets();
+        return datasetService.countAllDataSets();
     }
 
 

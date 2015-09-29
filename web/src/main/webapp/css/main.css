@@ -25,4 +25,32 @@
    
     
 }
+/*Summary table*/
+td.summaryCell {
+    width:20px;
+    height:20px;
+}
+ 
+td.loaded {
+    background:green;
+}
 
+td.missing {
+    background:lightgray;
+}
+
+
+tr.summaryRow{
+    
+}
+
+table.summaryTable{
+    
+}
+
+
+#Fix for jquery dialog position
+.fixed-dialog{
+  position: fixed;
+ 
+}

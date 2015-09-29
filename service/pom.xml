@@ -47,12 +47,6 @@
        
    
         <dependency>
-            <groupId>no.imr.nmdapi.client.service</groupId>
-            <artifactId>nmdrest</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>no.imr.framework.logging.slf4j</groupId>
             <artifactId>logging-framework</artifactId>
             <type>jar</type>

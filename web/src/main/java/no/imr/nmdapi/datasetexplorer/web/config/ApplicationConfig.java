@@ -10,10 +10,6 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author a5119
  *
- * This is the main application configuration. Any beans that is application
- * specific is created here. This does not include MVC (WebMVCConfig), REST
- * (RestDataConfig) and Persistence(PersistenceConfig) as these have their own
- * configuration setup.
  *
  */
 @Configuration

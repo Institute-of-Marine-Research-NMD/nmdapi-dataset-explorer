@@ -2,7 +2,9 @@ package no.imr.nmdapi.datasetexplorer.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import no.imr.nmdapi.datasetexplorer.dao.CruiseDAO;
 import no.imr.nmdapi.datasetexplorer.dao.DatasetDAO;
 import no.imr.nmdapi.datasetexplorer.service.beans.ImportCount;
 import no.imr.nmdapi.datasetexplorer.service.beans.Level;
@@ -23,7 +25,10 @@ public class DatasetServiceImpl implements DatasetService {
 
     @Autowired
     private DatasetDAO datasetDAO;
-    
+
+    @Autowired
+    private CruiseDAO cruiseDAO;
+
     @Override 
     public Collection listExistingDatasets(String missionType, String year, String platform,String delivery) {
         return     datasetDAO.listExistingDatasets(missionType,year,platform,delivery); 
@@ -32,26 +37,22 @@ public class DatasetServiceImpl implements DatasetService {
     
     @Override 
     public Collection listDeliveries(String missionType, String year, String platform) {
-        LOGGER.debug("Start list deliveries");
        return   datasetDAO.listDeliveries(missionType, year, platform);
     }
     
     @Override 
     public Collection listPlatforms(String missionType, String year) {
-        LOGGER.debug("Start list platform");
        return datasetDAO.listPlatforms(missionType, year);
     }
     
     
     @Override
     public Collection listYears(String missionType) {
-        LOGGER.debug("Start list years");
         return datasetDAO.listYears(missionType);
     }
 
     @Override
     public Collection listMissionTypes() {
-         LOGGER.debug("Start list mission types");
        return datasetDAO.listMissionTypes();
     }
 
@@ -167,7 +168,7 @@ public class DatasetServiceImpl implements DatasetService {
       {
        return datasetDAO.checkDataSetLoaded(missionType, year, platform, delivery, dataType) ;
       }
-
+ 
 
   
    public ImportCount countLoaded(final String missionType, final String year, final String platform, final String delivery) 
@@ -191,6 +192,39 @@ public class DatasetServiceImpl implements DatasetService {
     public Map listExistingDatasetsDetail(String missionType, String year, String platform, String delivery) {
         return datasetDAO.listExistingDatasetsDetail(missionType, year, platform, delivery);
     }
+    
+    
+    
+    @Override
+    public Map summarizeByCruise(String missionType, String year) {
+        
+      Collection<String> deliveryList;
+      ArrayList<String> dataSets; 
+      HashMap<String,HashMap> result = new HashMap<String,HashMap>();     
+      HashMap cruiseDatasets;
+      String cruiseNR;
+      
+       Collection<String> platformList = listPlatforms(missionType,year);
+       for (String platform:platformList)
+       {
+           deliveryList = listDeliveries(missionType, year, platform);
+             for (String delivery:deliveryList)
+             {
+                 cruiseDatasets = new HashMap();
+                 dataSets = (ArrayList<String>) listExistingDatasets(missionType, year, platform, delivery);
+                 
+                    for (String dataType : dataSets) {
+                         cruiseDatasets.put(dataType,checkDataSetLoaded(missionType, year, platform, delivery, dataType));
+                    }
+                 cruiseNR =(String) cruiseDAO.getCruiseByCruisePath("/" + missionType+"/" + year+"/" + platform+"/" +  delivery+"/");
+                result.put(cruiseNR, cruiseDatasets);
+             }             
+       }
+        
+        return  result;
+    }
  
+    
+    
     
 }

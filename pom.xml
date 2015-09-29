@@ -38,6 +38,7 @@
 
 	<mockito.version>2.0.31-beta</mockito.version>
 	<junit.version>4.11</junit.version>
+        <camel.version>2.15.2</camel.version>
     </properties>
   
   
@@ -142,6 +143,26 @@
                 </exclusions>
             </dependency>
 	    
+            <dependency>
+	<groupId>org.apache.camel</groupId>
+	<artifactId>camel-core</artifactId>
+	<version>${camel.version}</version>
+            </dependency>
+            <dependency>
+	<groupId>org.apache.camel</groupId>
+	<artifactId>camel-spring-javaconfig</artifactId>
+	<version>${camel.version}</version>
+                </dependency>
+
+            <dependency>
+            
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-servlet-api</artifactId>
+                <version>${tomcat.version}</version>
+                   <scope>provided</scope>
+                </dependency>
+
+            
             <!-- Loggging dependencies -->
             <dependency>
                 <groupId>no.imr.framework.logging.slf4j</groupId>

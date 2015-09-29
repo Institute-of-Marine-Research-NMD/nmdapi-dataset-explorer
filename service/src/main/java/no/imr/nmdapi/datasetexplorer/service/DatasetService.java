@@ -32,6 +32,8 @@ public interface DatasetService {
 
     Collection summarizeAllDataSets() ;
     
+    Map summarizeByCruise(String missionType, String year);
+    
     Object countAllDataSets();
 
 }

@@ -1,6 +1,6 @@
 package no.imr.nmdapi.datasetexplorer.service.config;
 
-import no.imr.nmdapi.datasetexplorer.service.config.DatasetServiceConfig;
+import no.imr.nmdapi.datasetexplorer.service.config.DatasetExplorerServiceConfig;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import org.junit.Test;
 public class TestDatasetServiceConfig {
 
     
-    private DatasetServiceConfig config = new DatasetServiceConfig();
+    private DatasetExplorerServiceConfig config = new DatasetExplorerServiceConfig();
 
     @Test
     public void testGetNMDMissionQueryService() {

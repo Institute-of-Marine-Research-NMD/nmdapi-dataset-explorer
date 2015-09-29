@@ -6,7 +6,7 @@ import java.util.Map;
 import no.imr.nmdapi.datasetexplorer.dao.config.DatasetDAOConfig;
 import no.imr.nmdapi.generic.response.v1.ResultElementType;
 import no.imr.nmdapi.datasetexplorer.service.beans.Level;
-import no.imr.nmdapi.datasetexplorer.service.config.DatasetServiceConfig;
+import no.imr.nmdapi.datasetexplorer.service.config.DatasetExplorerServiceConfig;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class,
-        classes = {DatasetServiceConfig.class,DatasetDAOConfig.class,TestContextConfig.class })
+        classes = {DatasetExplorerServiceConfig.class,DatasetDAOConfig.class,TestContextConfig.class })
 
 public class TestDatasetServiceConfigIT {
 

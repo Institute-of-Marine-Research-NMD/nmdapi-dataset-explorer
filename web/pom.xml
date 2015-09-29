@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>no.imr.nmdapi.web</groupId>
-        <artifactId>nmdapi-parent</artifactId>
+        <groupId>no.imr.nmdapi.client</groupId>
+        <artifactId>dataset-explorer</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>no.imr.nmdapi.client.web</groupId>
@@ -36,12 +36,18 @@
          <groupId>org.springframework</groupId>
          <artifactId>spring-context-support</artifactId>
        </dependency> 
+        <dependency>
+                <groupId>org.apache.camel</groupId>
+	<artifactId>camel-core</artifactId>
+        </dependency>
        
-       <dependency>
-         <groupId>org.apache.tomcat</groupId>
-         <artifactId>tomcat-servlet-api</artifactId>
-         <scope>provided</scope>
-       </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+               <scope>provided</scope>
+        </dependency>
+        
+        
         <dependency>
             <groupId>no.imr.framework.logging.slf4j</groupId>
             <artifactId>logging-framework</artifactId>
@@ -67,7 +73,7 @@
               <version>2.3</version>
               <configuration>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
-		<outputDirectory>/app/datasetExplorer/webapps</outputDirectory>
+		<outputDirectory>/app/nmdapi/webapps</outputDirectory>
               </configuration>
 	    </plugin>
 	  </plugins>

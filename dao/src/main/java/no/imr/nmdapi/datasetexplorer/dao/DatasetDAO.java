@@ -8,7 +8,6 @@ import java.util.Map;
  * @author Terry Hannant <a5119>
  */
 public interface DatasetDAO {
- 
     
     /**
      * List deliveries for platform
@@ -27,8 +26,7 @@ public interface DatasetDAO {
    * @return 
    */
   public Collection listPlatforms(String missionType, String year) ;
-
-  
+ 
   /**
    * List years for mission  type
    * @param missionType

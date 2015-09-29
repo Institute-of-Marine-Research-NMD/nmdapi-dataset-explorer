@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.imr.nmdapi.client.dao</groupId>
     <artifactId>dataset-explorer</artifactId>
-     <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>DAO module - DatasetExplorer</name>
     <parent>
-       <groupId>no.imr.nmdapi.client</groupId>
-       <artifactId>dataset-explorer</artifactId>
-       <version>0.0.1-SNAPSHOT</version>
+        <groupId>no.imr.nmdapi.client</groupId>
+        <artifactId>dataset-explorer</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     
     <dependencies>
@@ -17,35 +17,44 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
-           <dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-	<dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-beans</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-core</artifactId>
-      </dependency>
-       <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-web</artifactId>
-       </dependency>
-       <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-webmvc</artifactId>
-       </dependency>
         <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-context</artifactId>
-       </dependency> 
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
         <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-context-support</artifactId>
-       </dependency> 
-       
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency> 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency> 
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-spring-javaconfig</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>no.imr.nmdapi.client.service</groupId>
             <artifactId>nmdrest</artifactId>
@@ -69,23 +78,41 @@
             <version>0.0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>no.imr.nmd.commons.cruise.jaxb</groupId>
+            <artifactId>commons-cruise-jaxb</artifactId>
+            <version>0.0.4-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+       
+        <dependency>
+            <groupId>no.imr.nmd.commons.cruiseseries.jaxb</groupId>
+            <artifactId>commons-cruiseseries-jaxb</artifactId>
+            <version>1.0.4-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        
 
-	<dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-test</artifactId>
-          <scope>test</scope>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>org.mockito</groupId>
-	  <artifactId>mockito-core</artifactId>
-	  <scope>test</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
-	<dependency>
-	  <groupId>junit</groupId>
-	  <artifactId>junit</artifactId>
-	  <scope>test</scope>
-	</dependency>
-             
-	
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.imr.nmd.commons.dataset.jaxb</groupId>
+            <artifactId>commons-dataset-jaxb</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

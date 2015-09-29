@@ -1,6 +1,7 @@
 package no.imr.nmdapi.datasetexplorer.dao;
 
 import java.util.Collection;
+import java.util.Map;
 import no.imr.nmdapi.datasetexplorer.dao.config.DatasetDAOConfig;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -27,9 +28,8 @@ public class TestNMDDataSetDAOConfigIT {
     public void testDummy() {
         
       } 
-  
+  /*
     //TODO add not found tests
-    
     @Test
     public void testListDeliveries() {
         
@@ -94,6 +94,19 @@ public class TestNMDDataSetDAOConfigIT {
         }
       }
     
+    @Test
+    public void testListDataSetsDetail() {
+
+        Collection datasets = datasetDao.listExistingDatasets("Forskningsfartøy", "2015", "G O Sars-LMEL", "2015101");
+        assertNotNull(datasets);
+        for (Object dataType : datasets) {
+            assertNotNull(dataType);
+            assertTrue(dataType instanceof String);
+           System.out.println(" "+dataType);
+        }
+
+    }
+
     
     /*
     @Test

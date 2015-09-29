@@ -17,7 +17,12 @@ public class CamelConfig extends SingleRouteCamelConfiguration{
         
          return new RouteBuilder() {
             public void configure() {
-                 from("timer://updateCount?fixedRate=true&period=1800000").to("bean:datasetDAO?method=updateDataset");
+                 from("timer://updateCount?fixedRate=true&period=1800000")
+                         .to("bean:datasetDAO?method=updateDataset")
+                         .to("bean:cruiseSeriesDAO?method=updateCruiseSeries")
+                         .to("bean:timeSeriesDAO?method=updateTimeSeries")
+                         .to("bean:cruiseDAO?method=updateCruise");
+                 
             }
         };
     }

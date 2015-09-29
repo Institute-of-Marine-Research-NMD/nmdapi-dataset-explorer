@@ -29,7 +29,7 @@ public class WebAppInitalizer extends AbstractDispatcherServletInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebAppInitalizer.class);
     
     
- @Override
+  @Override
     protected WebApplicationContext createServletApplicationContext() {
         //What do we need to scan here?
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();

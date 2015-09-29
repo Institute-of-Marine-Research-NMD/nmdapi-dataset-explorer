@@ -1,14 +1,21 @@
 package no.imr.nmdapi.datasetexplorer.service.config;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import no.imr.nmdapi.common.converters.JAXBHttpMessageConverter;
+import no.imr.nmdapi.datasetexplorer.service.CruiseSeriesService;
+import no.imr.nmdapi.datasetexplorer.service.CruiseSeriesServiceImpl;
+import no.imr.nmdapi.datasetexplorer.service.CruiseService;
+import no.imr.nmdapi.datasetexplorer.service.CruiseServiceImpl;
 import no.imr.nmdapi.datasetexplorer.service.DatasetService;
 import no.imr.nmdapi.datasetexplorer.service.DatasetServiceImpl;
+import no.imr.nmdapi.datasetexplorer.service.TimeSeriesService;
+import no.imr.nmdapi.datasetexplorer.service.TimeSeriesServiceImpl;
 import no.imr.nmdapi.datasetexplorer.service.mapper.MissionNamespacePrefixMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +31,7 @@ import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConvert
  * @author a5119
  */
 @Configuration
-public class DatasetServiceConfig {
+public class DatasetExplorerServiceConfig {
 
     
     
@@ -38,7 +45,39 @@ public class DatasetServiceConfig {
           return new DatasetServiceImpl();
     }
  
+    
+    /**
+     * Creates the service implementation.
+     *
+     * @return  A reference service implementation.
+     */
+    @Bean(name="cruiseService")
+    public CruiseService getCruiseService() {
+          return new CruiseServiceImpl();
+    }
+ 
    
+    /**
+     * Creates the service implementation.
+     *
+     * @return  A reference service implementation.
+     */
+    @Bean(name="cruiseseriesService")
+    public CruiseSeriesService getCruiseSeriesService() {
+          return new CruiseSeriesServiceImpl();
+    }
+ 
+    
+    /**
+     * Creates the service implementation.
+     *
+     * @return  A reference service implementation.
+     */
+    @Bean(name="timeseriesService")
+    public TimeSeriesService getTimeSeriesService() {
+          return new TimeSeriesServiceImpl();
+    }
+ 
     
     /**
      * Create messages converters to be used
@@ -63,7 +102,7 @@ public class DatasetServiceConfig {
                converters.add(missionConverter);
 
         } catch (JAXBException ex) {
-            Logger.getLogger(DatasetServiceConfig.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatasetExplorerServiceConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
 
    
