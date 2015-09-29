@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
-import no.imr.nmdapi.common.converters.JAXBHttpMessageConverter;
+import no.imr.nmdapi.common.jaxb.converters.JAXBHttpMessageConverter;
 import no.imr.nmdapi.datasetexplorer.service.CruiseSeriesService;
 import no.imr.nmdapi.datasetexplorer.service.CruiseSeriesServiceImpl;
 import no.imr.nmdapi.datasetexplorer.service.CruiseService;
@@ -97,7 +97,7 @@ public class DatasetExplorerServiceConfig {
   
    JAXBHttpMessageConverter missionConverter;
         try {
-            missionConverter = new JAXBHttpMessageConverter(new MissionNamespacePrefixMapper(),
+            missionConverter = new JAXBHttpMessageConverter(new MissionNamespacePrefixMapper(),false,
                     "no.imr.nmdapi.generic.response.v1");
                converters.add(missionConverter);
 
