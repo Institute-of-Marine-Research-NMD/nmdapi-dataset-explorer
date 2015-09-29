@@ -6,7 +6,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import no.imr.nmdapi.common.converters.JAXBHttpMessageConverter;
+import no.imr.nmdapi.common.jaxb.converters.JAXBHttpMessageConverter;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseDAOTaskImpl;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseSeriesDAO;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseSeriesDAOTaskImpl;
@@ -170,7 +170,7 @@ public class DatasetDAOConfig {
 
         JAXBHttpMessageConverter missionConverter;
         try {
-            missionConverter = new JAXBHttpMessageConverter(new MissionNamespacePrefixMapper(),
+            missionConverter = new JAXBHttpMessageConverter(new MissionNamespacePrefixMapper(),false,
                     "no.imr.nmdapi.generic.response.v1");
             converters.add(missionConverter);
 
