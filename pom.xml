@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-     <groupId>no.imr.nmdapi.client</groupId>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>no.imr.nmdapi.client</groupId>
     <artifactId>dataset-explorer</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NMDApi dataset explorer</name>
     <modules>
@@ -23,7 +23,7 @@
             <url>http://repo.springsource.org/milestone</url>
         </repository>
     </repositories>
-     <properties>
+    <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.0.7.RELEASE</spring.version>
         <logback.version>1.1.0</logback.version>
@@ -36,8 +36,8 @@
         <jacksoncore.version>2.5.3</jacksoncore.version>
         <failsafe.version>2.18.1</failsafe.version>
 
-	<mockito.version>2.0.31-beta</mockito.version>
-	<junit.version>4.11</junit.version>
+        <mockito.version>2.0.31-beta</mockito.version>
+        <junit.version>4.11</junit.version>
         <camel.version>2.15.2</camel.version>
     </properties>
   
@@ -123,7 +123,7 @@
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
             </dependency>
-              <dependency>
+            <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>jsr250-api</artifactId>
                 <version>${jsr250.version}</version>
@@ -144,23 +144,23 @@
             </dependency>
 	    
             <dependency>
-	<groupId>org.apache.camel</groupId>
-	<artifactId>camel-core</artifactId>
-	<version>${camel.version}</version>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-core</artifactId>
+                <version>${camel.version}</version>
             </dependency>
             <dependency>
-	<groupId>org.apache.camel</groupId>
-	<artifactId>camel-spring-javaconfig</artifactId>
-	<version>${camel.version}</version>
-                </dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-spring-javaconfig</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
 
             <dependency>
             
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-servlet-api</artifactId>
                 <version>${tomcat.version}</version>
-                   <scope>provided</scope>
-                </dependency>
+                <scope>provided</scope>
+            </dependency>
 
             
             <!-- Loggging dependencies -->
@@ -195,24 +195,24 @@
                 <version>${slf4j.version}</version>
             </dependency>
 
-	     <dependency>
-	       <groupId>junit</groupId>
-	       <artifactId>junit</artifactId>
-	       <version>${junit.version}</version>
-	       <scope>test</scope>
-	     </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
 	    
-	  <dependency>
-            <groupId>org.mockito</groupId>
-	    <artifactId>mockito-core</artifactId>
-	    <version>${mockito.version}</version>
-	    <scope>test</scope>
-          </dependency>
-	  </dependencies>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
     
     
-        <build>
+    <build>
      
         <plugins>
             <plugin>
@@ -224,7 +224,7 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-                   <plugin>
+            <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.2</version>
             </plugin>
@@ -232,7 +232,7 @@
     </build>
     
     
-       <scm>
+    <scm>
         <connection>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-dataset-explorer.git</connection>
         <url>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-dataset-explorer.git</url>
         <developerConnection>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-dataset-explorer.git</developerConnection>
