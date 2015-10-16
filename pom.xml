@@ -211,4 +211,43 @@
 	  </dependencies>
     </dependencyManagement>
     
+    
+        <build>
+     
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+                   <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+        </plugins>
+    </build>
+    
+    
+       <scm>
+        <connection>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-dataset-explorer.git</connection>
+        <url>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-dataset-explorer.git</url>
+        <developerConnection>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-dataset-explorer.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>https://build.imr.no/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>https://build.imr.no/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    
 </project>
