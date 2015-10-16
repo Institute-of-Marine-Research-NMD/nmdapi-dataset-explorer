@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Terry Hannant <a5119>
  */
 @RestController
-public class TimeSeriesController {
+public class SurveyTimeSeriesController {
 
-     private static final Logger LOGGER = LoggerFactory.getLogger(TimeSeriesController.class);
+     private static final Logger LOGGER = LoggerFactory.getLogger(SurveyTimeSeriesController.class);
     
     @Autowired private TimeSeriesService timeSeriesService;
+    
+    @Autowired private CruiseSeriesService cruiseSeriesService;
+    
   
     /** 
      * *General exception handler
@@ -44,38 +47,39 @@ public class TimeSeriesController {
      * 
      * @return
      */
-    @RequestMapping(value = "/TimeSeries/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/SurveyTimeSeries/list", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object listTimeSeries() {
-        return timeSeriesService.listTimeSeries();
+        return timeSeriesService.listSurveyTimeSeries();
     }
     
    /**
-     * List years for a cruise series
+     * List sample times for a Survey timeseries
      * 
      * @return
      */
-    @RequestMapping(value = "/TimeSeries/list/{timeSeriesName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/SurveyTimeSeries/listSamples/{surveyTimeSeriesName}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Object listTimeSeries( @PathVariable(value = "timeSeriesName") String timeSeriesName) {
-        return timeSeriesService.listTimeSeriesYears(timeSeriesName);
+    public Object listTimeSeries( @PathVariable(value = "surveyTimeSeriesName") String surveyTimeSeriesName) {
+        return timeSeriesService.listSurveyTimeSeriesSample(surveyTimeSeriesName);
+    }
+
+    
+   /**
+     * List cruises for a Survey timeseries and time
+     * 
+     * @return
+     */
+    @RequestMapping(value = "/SurveyTimeSeries/listCruise/{surveyTimeSeriesName}/{period}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object listTimeSeries( @PathVariable(value = "surveyTimeSeriesName") String surveyTimeSeriesName,
+             @PathVariable(value = "period") String period) {
+        return timeSeriesService.listSurveyTimeSeriesCruise(surveyTimeSeriesName,period);
     }
 
  
-   /**
-     * List datasets  nr for a cruise series and year
-     * 
-     * @return
-     */
-    @RequestMapping(value = "/TimeSeries/list/{timeSeriesName}/{year}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public Object listCruiseSeries( @PathVariable(value = "timeSeriesName") String timeSeriesName,
-           @PathVariable(value = "year") String year ) {
-        return timeSeriesService.listCruises(timeSeriesName,year);
-    }
-
     
 }

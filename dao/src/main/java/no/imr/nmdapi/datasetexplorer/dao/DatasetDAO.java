@@ -1,6 +1,7 @@
 package no.imr.nmdapi.datasetexplorer.dao;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,7 +65,7 @@ public interface DatasetDAO {
      public Map listExistingDatasetsDetail(String missionType, String year, String platform, String delivery) ;
 
      /**
-      * Check if a data set has been loaded
+      * Check if a data set file exists
       * @param missionType
       * @param year
       * @param platform
@@ -72,7 +73,10 @@ public interface DatasetDAO {
       * @param dataType
       * @return 
       */
-     public  boolean checkDataSetLoaded(String missionType, String year, String platform, String delivery,String dataType);
+     public  boolean checkDatasetFileExists(String missionType, String year, String platform, String delivery,String dataType);
  
+     
+     
+     public List listDatasetNames();
      
 }

@@ -29,7 +29,7 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
     
     private HashMap<String, String> cruisePathMap;
     private HashMap<String, String> cruiseNRMap;
-    
+    HashMap<String,CruiseType> cruiseDetailMap;
    
 
     public void updateCruise() {
@@ -40,6 +40,7 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
 
         HashMap<String, String> newCruisePathMap = new HashMap< String, String>();
         HashMap<String, String> newCruiseNRMap = new HashMap< String, String>();
+        HashMap<String,CruiseType> newCruiseDetailMap   = new HashMap<String, CruiseType>();
         
         String currentPath;
         File filePath;
@@ -67,8 +68,10 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
                         try {
                             
                             CruiseType cruise = (CruiseType) JAXBIntrospector.getValue(cruiseUnMarshaller.unmarshal(filePath));
+                            
                             newCruisePathMap.put(cruise.getCruiseCode(),"/"+expand("/", missionType, year, platform,delivery));
                             newCruiseNRMap.put("/"+expand("/", missionType, year, platform,delivery),cruise.getCruiseCode());
+                            newCruiseDetailMap.put("/"+expand("/", missionType, year, platform,delivery),cruise);
                             
                             
                         } catch (JAXBException ex) {
@@ -81,6 +84,7 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
         
         cruisePathMap = newCruisePathMap;
         cruiseNRMap = newCruiseNRMap;
+        cruiseDetailMap = newCruiseDetailMap;
         LOG.debug("End update");
         used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
         LOG.debug("Mem"+used);
@@ -107,7 +111,11 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
         }
         return result;    
     }
-
+  
+      public CruiseType getCruiseDetailByCruisePath(String cruisePath) {
+       return cruiseDetailMap.get(cruisePath);
+    }
+   
     
     private String expand(String separator, String... args) {
         StringBuilder result = new StringBuilder();
@@ -126,4 +134,6 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
         }
         return result;
     }
+
+  
 }

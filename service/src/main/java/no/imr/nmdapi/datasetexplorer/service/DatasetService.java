@@ -34,6 +34,10 @@ public interface DatasetService {
     
     Map summarizeByCruise(String missionType, String year);
     
+    Map summarizeDatasetsStatus(String missionType, String year);
+  
+    Collection listCruiseDatasetTypes();
+            
     Object countAllDataSets();
 
 }

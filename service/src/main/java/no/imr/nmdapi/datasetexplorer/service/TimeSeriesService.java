@@ -8,10 +8,13 @@ import java.util.Collection;
  */
 public interface TimeSeriesService {
 
-    public Collection listTimeSeries();
-
-    public Collection listTimeSeriesYears(String timeSeriesName);
-
-    public Collection listCruises(String timeSeriesName, String year);
     
+     
+    public Collection listSurveyTimeSeries() ;
+ 
+    public Collection listSurveyTimeSeriesSample(String surveyTimeSeriesName) ;
+
+    public Collection listSurveyTimeSeriesCruiseSeries(String surveyTimeSeriesName) ;
+
+    public Collection listSurveyTimeSeriesCruise(String surveyTimeSeriesName,String period);
 }

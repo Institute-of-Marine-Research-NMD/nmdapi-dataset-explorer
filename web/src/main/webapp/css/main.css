@@ -30,14 +30,53 @@ td.summaryCell {
     width:20px;
     height:20px;
 }
+td.cruisecode {
+    width:350px;
+}
  
-td.loaded {
+
+td.Y_YES {
     background:green;
 }
 
-td.missing {
-    background:lightgray;
+td.L_YES {
+    background:red;
 }
+
+td.S_YES {
+    background:yellow;
+}
+
+
+td.Y_NO {
+    background:purple;
+}
+
+td.L_NO {
+    background:lightgrey;
+}
+
+td.S_NO {
+    background:lightgrey;
+}
+
+td.UNKNOWN {
+    background:purple;
+}
+
+td.Y_UNKNOWN {
+    background:purple;
+}
+
+td.L_UNKNOWN {
+    background:purple;
+}
+
+td.S_UNKNOWN {
+    background:purple;
+}
+
+
 
 
 tr.summaryRow{

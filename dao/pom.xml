@@ -45,7 +45,17 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency> 
-
+  <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <exclusions>
+                    <!-- Commons logging is excluded because it is overriden by JCL-over-slf4j -->
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
@@ -61,31 +71,41 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>no.imr.nmdapi.generic</groupId>
-            <artifactId>exceptions</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>no.imr.nmdapi.common</groupId>
+            <artifactId>nmdapi-exceptions</artifactId>
+            <version>0.0.2</version>
             <type>jar</type>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>no.imr.nmdapi.generic</groupId>
             <artifactId>nmdmission</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <type>jar</type>
-        </dependency>
+        </dependency -->
         <dependency>
             <groupId>no.imr.nmd.commons.cruise.jaxb</groupId>
             <artifactId>commons-cruise-jaxb</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>1.0.7</version>
             <type>jar</type>
         </dependency>
+       
+       
        
         <dependency>
             <groupId>no.imr.nmd.commons.cruiseseries.jaxb</groupId>
             <artifactId>commons-cruiseseries-jaxb</artifactId>
-            <version>1.0.4-SNAPSHOT</version>
+            <version>1.0.16</version>
             <type>jar</type>
         </dependency>
-        
+
+
+<dependency>
+  <groupId>no.imr.nmd.commons.surveytimeseries.jaxb</groupId>
+  <artifactId>commons-surveytimeseries-jaxb</artifactId>
+  <version>0.0.14</version>
+</dependency>
+
+                
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -105,19 +125,25 @@
         <dependency>
             <groupId>no.imr.nmd.commons.dataset.jaxb</groupId>
             <artifactId>commons-dataset-jaxb</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.9</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>no.imr.nmdapi.commons.respones</groupId>
             <artifactId>nmdapi-commons-respones</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.4</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>no.imr.nmd.commons.jaxb</groupId>
             <artifactId>commons-jaxb</artifactId>
             <version>0.0.9</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-quartz</artifactId>
+            <version>2.15.3</version>
             <type>jar</type>
         </dependency>
     </dependencies>

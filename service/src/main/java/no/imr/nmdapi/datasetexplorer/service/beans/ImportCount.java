@@ -5,8 +5,9 @@ package no.imr.nmdapi.datasetexplorer.service.beans;
  * @author a5119
  */
 public class ImportCount {
-    private  long total;
-    private  long actual;
+    private  long loaded;
+    private  long exists;
+    private  long identified;
     private long missionCount;
 
     public long getMissionCount() {
@@ -19,34 +20,34 @@ public class ImportCount {
  
     
      public ImportCount() {
-        this.total = 0;
-        this.actual = 0;
+        this.loaded = 0;
+        this.exists = 0;
+        this.identified=0;
     }
 
-    public ImportCount(long total,long actual,long missionCount ) {
-        this.total = total;
-        this.actual = actual;
+    public ImportCount(long identified,long loaded,long existing,long missionCount ) {
+        this.identified = identified;
+        this.loaded = loaded;
+        this.exists = exists;
         this.missionCount = missionCount;
     }
-
-    public long getTotal() {
-        return total;
-    }
-
-    public long getActual() {
-        return actual;
-    }
     
-    public void incTotal()
+    public void incIdentifed()
     {
-        this.total++;
+        this.identified++;
     }
 
-     public void incActual()
+     public void incLoaded()
     {
-        this.actual++;
+        this.loaded++;
     }
 
+     public void incExists()
+    {
+        this.exists++;
+    }
+
+     
      public void incMissionCount()
     {
         this.missionCount++;
@@ -54,11 +55,35 @@ public class ImportCount {
 
      
     public void add(ImportCount count) {
-        this.total = this.total + count.total;
-        this.actual = this.actual + count.actual;
+        this.identified = this.identified + count.getIdentified();
+        this.loaded = this.loaded + count.getLoaded();
+        this.exists = this.exists + count.getExists();
         this.missionCount = this.missionCount + count.missionCount;
     }
 
+    public long getLoaded() {
+        return loaded;
+    }
+
+    public long getExists() {
+        return exists;
+    }
+
+    public long getIdentified() {
+        return identified;
+    }
+
+    public void decIdentified() {
+        this.identified--;
+    }
+
+    public void decLoaded() {
+        this.loaded--;
+    }
+
+    
+    
+    
     
 }
     

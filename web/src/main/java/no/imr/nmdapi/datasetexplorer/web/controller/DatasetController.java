@@ -207,6 +207,20 @@ public class DatasetController {
         return datasetService.summarizeByCruise(missionType, year);
     }
     
+    
+    /**
+     * List cruises and their datasets for a year and mission type
+     *
+     * @return
+     */
+    @RequestMapping(value = "/statusByCruise/{missiontype}/{year}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object datasetStatus(@PathVariable(value = "missiontype") String missionType,
+            @PathVariable(value = "year") String year) {
+        return datasetService.summarizeDatasetsStatus(missionType, year);
+    }
+    
    /**
      * List all  mission types  and their load counts.
      *
@@ -233,7 +247,18 @@ public class DatasetController {
     }
 
 
-    
+    /**
+     * List all cruise dataset types
+     * 
+     * @return
+     */
+    @RequestMapping(value = "/listCruiseDatsetTypes", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object listCruiseDatasetTypes() {
+        return datasetService.listCruiseDatasetTypes();
+    }
+
     
 }
  

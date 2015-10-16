@@ -12,8 +12,8 @@ import no.imr.nmdapi.datasetexplorer.dao.CruiseSeriesDAO;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseSeriesDAOTaskImpl;
 import no.imr.nmdapi.datasetexplorer.dao.DatasetDAO;
 import no.imr.nmdapi.datasetexplorer.dao.DatasetDAOTaskImpl;
-import no.imr.nmdapi.datasetexplorer.dao.TimeSeriesDAO;
-import no.imr.nmdapi.datasetexplorer.dao.TimeSeriesDAOTaskImpl;
+import no.imr.nmdapi.datasetexplorer.dao.SurveyTimeSeriesDAO;
+import no.imr.nmdapi.datasetexplorer.dao.SurveyTimeSeriesDAOTaskImpl;
 import no.imr.nmdapi.datasetexplorer.dao.mapper.MissionNamespacePrefixMapper;
 
 
@@ -64,9 +64,9 @@ public class DatasetDAOConfig {
      *
      * @return A reference service implementation.
      */
-    @Bean(name = "timeSeriesDAO")
-     public TimeSeriesDAO getTimeSeriesDAO() {
-        return new TimeSeriesDAOTaskImpl();
+    @Bean(name = "surveyTimeSeriesDAO")
+     public SurveyTimeSeriesDAO getSurveyTimeSeriesDAO() {
+        return new SurveyTimeSeriesDAOTaskImpl();
     }
   
     
@@ -118,7 +118,7 @@ public class DatasetDAOConfig {
             ctx = JAXBContext.newInstance("no.imr.nmd.commons.dataset.jaxb");
             unMarshaller = ctx.createUnmarshaller();
         } catch (JAXBException ex) {
-            LOG.error("Can not create Dataset unmarshaller message converter ", ex);
+            LOG.error("Can not create Dataset unmarshaller ", ex);
         }
         return unMarshaller;
     }
@@ -132,7 +132,7 @@ public class DatasetDAOConfig {
             ctx = JAXBContext.newInstance("no.imr.nmd.commons.cruise.jaxb");
             unMarshaller = ctx.createUnmarshaller();
         } catch (JAXBException ex) {
-            LOG.error("Can not create Cruise unmarshaller message converter ", ex);
+            LOG.error("Can not create Cruise unmarshaller", ex);
         }
         return unMarshaller;
     }
@@ -143,14 +143,33 @@ public class DatasetDAOConfig {
 
         JAXBContext ctx;
         try {
-            ctx = JAXBContext.newInstance("no.imr.commons.nmdcruiseseries.domain.v1");
+            ctx = JAXBContext.newInstance("no.imr.nmd.commons.cruiseseries.domain.v1");
             unMarshaller = ctx.createUnmarshaller();
         } catch (JAXBException ex) {
-            LOG.error("Can not create Cruise unmarshaller message converter ", ex);
+            LOG.error("Can not create Cruise unmarshaller ", ex);
         }
         return unMarshaller;
     }
 
+    
+    @Bean(name = "surveytimeseriesUnMarshaller")
+    public Unmarshaller getSurveyTimeseriesUnMarshaller() {
+        Unmarshaller unMarshaller = null;
+
+        JAXBContext ctx;
+        try {
+            ctx = JAXBContext.newInstance("no.imr.nmd.commons.surveytimeseries.jaxb");
+            unMarshaller = ctx.createUnmarshaller();
+        } catch (JAXBException ex) {
+            LOG.error("Can not create Survey time  unmarshaller ", ex);
+        }
+        return unMarshaller;
+    }
+
+    
+
+    
+    
    
 
     /**

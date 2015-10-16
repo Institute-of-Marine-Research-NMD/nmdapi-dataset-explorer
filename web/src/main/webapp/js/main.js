@@ -1,7 +1,13 @@
 var app = {};
 $(document).ready(function () {
 
+
+    app.cruiseDatasetNames=[];;
+
     app.baseURL = "../";
+    app.stoxURL=location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+"/apis/nmdapi/stox/v1/";
+
+
 
     // unblock when ajax activity stops 
     $(document).ajaxStop($.unblockUI);
@@ -54,6 +60,10 @@ $(document).ready(function () {
             });
         });
     };
+    
+      callRest("listCruiseDatsetTypes", function (data) {
+          app.cruiseDatasetNames = data;
+        });
 
     //Setup expand node handling
     $("#browseTree").bind(
@@ -90,11 +100,13 @@ $(document).ready(function () {
 
                     switch (data.node.parents.length) {
                         case 1:
-                        case 2:
                             addTimeSeries(data.node.id, path);
                             break;
+                        case 2:
+                            addTimeSeriesSamples(data.node.id, path);
+                            break;
                         case 3:
-                            addTimeSeriesDatasets(data.node.id, path);
+                            addTimeSeriesDatasets(data.node.id, path,orgNode.stoxID);
                             break;
                         case 4:
                             console.log("data type");
@@ -123,7 +135,7 @@ $(document).ready(function () {
 
 
                 }
-
+ 
 
             }
     );
@@ -131,32 +143,32 @@ $(document).ready(function () {
     var initData = callRest("countAll", function (data) {
 
 
-        browseTree.create_node("#", {text: formatCount("All by Cruise", data),
+        browseTree.create_node("#", {text: formatCount("Cruise", data),
             fullPath: "/"},
         "first");
-        browseTree.create_node("#", {text: "All by Cruise series", cruiseSeries: true,
+        browseTree.create_node("#", {text: "Cruise series", cruiseSeries: true,
             fullPath: "/"},
         "last");
-        browseTree.create_node("#", {text: "All by TimeSeries", timeSeries: true,
+        browseTree.create_node("#", {text: "Survey Timeseries", timeSeries: true,
             fullPath: "/"},
         "last");
 
-
-        var statPercent = Math.round(data.actual / data.total * 100.0);
+    console.log("xxx",data.identified,data);
+        var statPercent = Math.round(data.loaded / data.identified * 100.0);
         $('<div/>', {
             "data-type": "half",
             "data-fgcolor": "#61a9dc",
             "data-fill": "#ddd",
-            "data-total": data.total,
-            "data-part": data.actual,
+            "data-total": data.identified,
+            "data-part": data.loaded,
             "data-text": statPercent + "%",
             "data-info": "Datasets loaded",
             id: "allStatDial"
         }).appendTo('#totalStatus');
         $('#allStatDial').circliful();
 
-        $('#totalStatusMessage1').html("Datasets loaded: " + data.actual);
-        $('#totalStatusMessage2').html("Datasets identified: " + data.total);
+        $('#totalStatusMessage1').html("Datasets loaded: " + data.loaded);
+        $('#totalStatusMessage2').html("Datasets identified: " + data.identified);
         $('#totalStatusMessage3').html("Cruise count: " + data.missionCount);
 
 
@@ -236,11 +248,12 @@ $(document).ready(function () {
     };
 
 
+
     var addTimeSeries = function (par, path)
     {
 
         var countText;
-        callRest("TimeSeries/list" + path, function (data) {
+        callRest("SurveyTimeSeries/list" + path, function (data) {
             for (var i = 0; i < data.length; i++)
             {
                 countText = data[i];
@@ -252,20 +265,34 @@ $(document).ready(function () {
         });
     }
 
+   var addTimeSeriesSamples = function (par, path)
+    {
+
+        var countText;
+        callRest("SurveyTimeSeries/listSamples" + path, function (data) {
+            for (var i = 0; i < data.length; i++)
+            {
+                countText = data[i].sampleTime;
+               var x= browseTree.create_node(par, {text: countText, timeSeries: true,
+                    fullPath: path + "/" + data[i].sampleTime,stoxID:data[i].stoxID}
+                , 'last');
+            }
+            browseTree.open_node(par);
+        });
+    }
+
+
 
 //Ugly hack need to refactor so easier to read
-    var addTimeSeriesDatasets = function (par, path)
+    var addTimeSeriesDatasets = function (par, path,stoxID)
     {
         browseTree.create_node(par, {"type": "file", timeSeries: true,
-            text: "Stox not loaded"}
+            text: createDataLink("Stox",    app.stoxURL+stoxID)}
                             , 'last');
         
-        callRest("TimeSeries/list" + path, function (cruiseList) {
-                     console.log(" cl " + cruiseList);
-
+        callRest("SurveyTimeSeries/listCruise" + path, function (cruiseList) {
             for (var i = 0; i < cruiseList.length; i++)  {
                 cruiseNR = cruiseList[i];
-                console.log(" nr " + cruiseNR);
        
                 callRest("Cruise/mapByNR/" + cruiseNR, function (cruiseData) {
 
@@ -336,62 +363,31 @@ $(document).ready(function () {
     app.showSummary = function (path) {
         console.log("show summary");
         console.log(path);
-          callRest("summarizeByCruise" + path, function (data) {
+          callRest("statusByCruise" + path, function (data) {
          console.log(data);
          var sumTable =  $("<table class='summaryTable'>");
          var head=  $("<tr class='summaryHeader' >");
          head.append("<th class='summaryHead' >Cruise Code</th>");
-         head.append("<th class='summaryHead' >Cruise</th>");
-         head.append("<th class='summaryHead' >Biotic</th>");
-         head.append("<th class='summaryHead' >Echosounder</th>");
-         head.append("<th class='summaryHead' >Physics</th>");
-         head.append("<th class='summaryHead' >Chemistry</th>");
-         head.append("<th class='summaryHead' >Eventlogger</th>");
-     
-         
+          for (var i=0;i<app.cruiseDatasetNames.length;i++) {
+                head.append("<th class='summaryHead' >"+app.cruiseDatasetNames[i]+"</th>");
+         }
          sumTable.append(head);        
-              
+           
                
-                jQuery.each(data, function (name, value) {
+           jQuery.each(data, function (name, value) {
                     var row =  $("<tr class='summaryRow' >");
-                    row.append("<td class='summaryCell' >"+name+"</td>");
-                    if  (value.cruise) {
-                    row.append("<td class='summaryCell loaded' >");
-                    }else {
-                    row.append("<td class='summaryCell missing' >");
-                    }
-                    if  (value.biotic) {
-                    row.append("<td class='summaryCell loaded' >");
-                    }else {
-                    row.append("<td class='summaryCell missing' >");
-                    }
-              
-                 if  (value.echosounder) {
-                    row.append("<td class='summaryCell loaded' >");
-                    }else {
-                    row.append("<td class='summaryCell missing' >");
-                    }
-              
-               if  (value.physics) {
-                    row.append("<td class='summaryCell loaded' >");
-                    }else {
-                    row.append("<td class='summaryCell missing' >");
-                    }
-              
-               if  (value.chemistryr) {
-                    row.append("<td class='summaryCell loaded' >");
-                    }else {
-                    row.append("<td class='summaryCell missing' >");
-                    }
-              
-               if  (value.eventlogger) {
-                    row.append("<td class='summaryCell loaded' >");
-                    }else {
-                    row.append("<td class='summaryCell missing' >");
-                    }
-              
-              
-              
+                    var cellClass;
+                    row.append("<td class=' cruisecode' >"+name.toLowerCase()+"</td>");
+                    
+                   for (var i=0;i<app.cruiseDatasetNames.length;i++) {
+                          if (value.loaded[app.cruiseDatasetNames[i]]) {  // Do we know anything about dataset
+                              cellClass = value.loaded[app.cruiseDatasetNames[i]]+"_"+value.exists[app.cruiseDatasetNames[i]];
+                             row.append("<td class='summaryCell "+cellClass+"' >");
+                          } else {
+                             row.append("<td class='summaryCell UNKNOWN' >");
+                          }
+                     }
+    
                     sumTable.append(row);
                 });
                  var sumDialog =  $("<div>");
@@ -493,6 +489,6 @@ $(document).ready(function () {
 
     var formatCount = function (name, data)
     {
-        return name + "   (" + data.actual + "/" + data.total + ")  ";//+data.missionCount+" missions";
+        return name + "   (" + data.loaded + "/" + data.identified + ")  ";//+data.missionCount+" missions";
     }
 });

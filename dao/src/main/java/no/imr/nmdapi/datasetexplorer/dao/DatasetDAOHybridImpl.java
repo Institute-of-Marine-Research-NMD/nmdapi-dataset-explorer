@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import no.imr.nmd.commons.cruise.jaxb.CruiseType;
+import no.imr.nmd.commons.cruise.jaxb.DataTypeEnum;
+import no.imr.nmd.commons.cruise.jaxb.DatasetType;
+import no.imr.nmd.commons.cruise.jaxb.ExistsEnum;
+import no.imr.nmdapi.exceptions.NotFoundException;
 import no.imr.nmdapi.generic.response.v1.ListElementType;
-import no.imr.nmdapi.generic.exceptions.NotFoundException;
-import no.imr.nmdapi.generic.nmdmission.domain.v1.DatatypeElementType;
-import no.imr.nmdapi.generic.nmdmission.domain.v1.ExistsEnum;
-import no.imr.nmdapi.generic.nmdmission.domain.v1.MissionType;
 import no.imr.nmdapi.generic.response.v1.ResultElementType;
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -66,17 +67,17 @@ public class DatasetDAOHybridImpl implements DatasetDAO {
         
     @Override
     public Collection listExistingDatasets(String missionType, String year, String platform, String delivery) {
-        String filePath = config.getString("base.filePath") + expand(File.separator, missionType, year, platform, delivery) + "/mission/data.xml";
+        String filePath = config.getString("base.filePath") + expand(File.separator, missionType, year, platform, delivery) + "/cruise/data.xml";
         File path = new File(filePath);
 
         ArrayList<String> result = new ArrayList<String>();
-        MissionType mission;
+       CruiseType mission;
         try {
-            mission = (MissionType) missionUnMarshaller.unmarshal(path);
+            mission = (CruiseType) missionUnMarshaller.unmarshal(path);
             result = new ArrayList<String>();
-            for (DatatypeElementType missionDetail : mission.getDatatypes().getDatatype()) {
-                if (missionDetail.getExists() == ExistsEnum.YES) {
-                    result.add(missionDetail.getName());
+            for (DatasetType missionDetail : mission.getDatasets().getDataset()) {
+                if (missionDetail.getCollected().equals(ExistsEnum.YES)) {
+                    result.add(missionDetail.getDataType().name());
                 }
             }
         } catch (JAXBException ex) {
@@ -161,7 +162,7 @@ public class DatasetDAOHybridImpl implements DatasetDAO {
 
                 for (String dataType:dataSets)
                 {
-                              if (checkDataSetLoaded(missionType,year,platform,delivery,dataType))    {
+                              if (checkDatasetFileExists(missionType,year,platform,delivery,dataType))    {
                                             dataURL =datasetPathTemplate.expand(dataType, missionType,year,platform,delivery).toString();
                                        }
                               else {
@@ -174,7 +175,7 @@ public class DatasetDAOHybridImpl implements DatasetDAO {
     }
     
    @Override
-     public  boolean checkDataSetLoaded(String missionType, String year, String platform, String delivery,String dataType)
+     public  boolean checkDatasetFileExists(String missionType, String year, String platform, String delivery,String dataType)
       {
         String endPointURL = config.getString("base.URL")+datasetDataPath;
         URI uri = new UriTemplate(endPointURL).expand( dataType, missionType,year,platform,delivery);
@@ -202,6 +203,10 @@ public class DatasetDAOHybridImpl implements DatasetDAO {
             result.add(element.getResult());
         }
         return result;
+    }
+
+    public List listDatasetNames() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

@@ -12,93 +12,104 @@
     <name>Web module - Dataset Explorer</name>
     <dependencies>
   
-	<dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-beans</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-core</artifactId>
-      </dependency>
-       <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-web</artifactId>
-       </dependency>
-       <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-webmvc</artifactId>
-       </dependency>
         <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-context</artifactId>
-       </dependency> 
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
         <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-context-support</artifactId>
-       </dependency> 
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
         <dependency>
-                <groupId>org.apache.camel</groupId>
-	<artifactId>camel-core</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency> 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency> 
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
         </dependency>
        
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
-               <scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
         
         
         <dependency>
             <groupId>no.imr.framework.logging.slf4j</groupId>
             <artifactId>logging-framework</artifactId>
-             <type>jar</type>
+            <type>jar</type>
         </dependency>
         
-         <dependency>
+        <dependency>
             <groupId>no.imr.nmdapi.client.service</groupId>
             <artifactId>dataset-explorer</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <exclusions>
+                <!-- Commons logging is excluded because it is overriden by JCL-over-slf4j -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <profiles>
-      <profile>
-	<id>localDeploy</id>
-	<build>
-          <finalName>nmdDatasetExplorer#v1</finalName>
-	  <plugins>
-	    <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-war-plugin</artifactId>
-              <version>2.3</version>
-              <configuration>
-		<failOnMissingWebXml>false</failOnMissingWebXml>
-		<outputDirectory>/app/nmdapi/webapps</outputDirectory>
-              </configuration>
-	    </plugin>
-	  </plugins>
-	</build>
-      </profile>
-      <profile>
-	<id>default</id>
-	<activation>
-          <activeByDefault>true</activeByDefault>
-        </activation>
-	<build>
-          <finalName>nmdDatasetExplorer#v1</finalName>
-	  <plugins>
-	    <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-war-plugin</artifactId>
-              <version>2.3</version>
-              <configuration>
-		<failOnMissingWebXml>false</failOnMissingWebXml>
-              </configuration>
-	    </plugin>
-	  </plugins>
-	</build>
-      </profile>
-  </profiles>
+        <profile>
+            <id>localDeploy</id>
+            <build>
+                <finalName>DatasetExplorer#v1</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.3</version>
+                        <configuration>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                            <outputDirectory>/app/datasetExplorer/webapps</outputDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <finalName>DatasetExplorer#v1</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.3</version>
+                        <configuration>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     
 </project>

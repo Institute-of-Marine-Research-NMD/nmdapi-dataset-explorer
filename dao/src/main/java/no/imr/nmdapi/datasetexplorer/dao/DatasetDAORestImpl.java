@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.bind.Unmarshaller;
+import no.imr.nmd.commons.cruise.jaxb.CruiseType;
+import no.imr.nmd.commons.cruise.jaxb.DatasetType;
+import no.imr.nmd.commons.cruise.jaxb.ExistsEnum;
+import no.imr.nmdapi.exceptions.NotFoundException;
 import no.imr.nmdapi.generic.response.v1.ListElementType;
-import no.imr.nmdapi.generic.exceptions.NotFoundException;
-import no.imr.nmdapi.generic.nmdmission.domain.v1.DatatypeElementType;
-import no.imr.nmdapi.generic.nmdmission.domain.v1.ExistsEnum;
-import no.imr.nmdapi.generic.nmdmission.domain.v1.MissionType;
 import no.imr.nmdapi.generic.response.v1.ResultElementType;
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -61,11 +61,11 @@ public class DatasetDAORestImpl implements DatasetDAO {
    result = new ArrayList<String>();
     
    try {
-   MissionType mission  = restClient.getForObject(endPointURL, MissionType.class, missionType, year, platform, delivery);
-    for (DatatypeElementType dataType:mission.getDatatypes().getDatatype())
+   CruiseType mission  = restClient.getForObject(endPointURL, CruiseType.class, missionType, year, platform, delivery);
+    for ( DatasetType dataType:mission.getDatasets().getDataset())
         {
-            if (dataType.getExists().equals(ExistsEnum.YES)) {
-                  result.add(dataType.getName());
+            if (dataType.getCollected().equals(ExistsEnum.YES)) {
+                  result.add(dataType.getDataType().name());
                   }
              }
     
@@ -152,7 +152,7 @@ public class DatasetDAORestImpl implements DatasetDAO {
 
                 for (String dataType:dataSets)
                 {
-                              if (checkDataSetLoaded(missionType,year,platform,delivery,dataType))    {
+                              if (checkDatasetFileExists(missionType,year,platform,delivery,dataType))    {
                                             dataURL =datasetPathTemplate.expand(dataType, missionType,year,platform,delivery).toString();
                                        }
                               else {
@@ -165,7 +165,7 @@ public class DatasetDAORestImpl implements DatasetDAO {
     }
     
    @Override
-     public  boolean checkDataSetLoaded(String missionType, String year, String platform, String delivery,String dataType)
+     public  boolean checkDatasetFileExists(String missionType, String year, String platform, String delivery,String dataType)
       {
         String endPointURL = config.getString("base.URL")+datasetDataPath;
         URI uri = new UriTemplate(endPointURL).expand( dataType, missionType,year,platform,delivery);
@@ -193,6 +193,10 @@ public class DatasetDAORestImpl implements DatasetDAO {
             result.add(element.getResult());
         }
         return result;
+    }
+
+    public List listDatasetNames() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
