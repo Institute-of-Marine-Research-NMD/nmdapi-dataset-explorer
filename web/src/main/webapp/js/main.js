@@ -86,14 +86,16 @@ $(document).ready(function () {
                     switch (data.node.parents.length) {
                         case 1:
                         case 2:
+                           addCruiseSeries(data.node.id, path);
+                            break;
                         case 3:
+                            addDatasetSummary(data.node.id,"CruiseSeries/summary", path);
                             addCruiseSeries(data.node.id, path);
                             break;
                         case 4:
                             addCruiseDatasets(data.node.id, orgNode.text);
                             break;
                         case 5:
-                            console.log("data type");
                     }
                 } else if (orgNode.timeSeries) {
                     console.log("Time series");
@@ -106,10 +108,12 @@ $(document).ready(function () {
                             addTimeSeriesSamples(data.node.id, path);
                             break;
                         case 3:
+                            addDatasetSummary(data.node.id,"SurveyTimeSeries/summary", path);
                             addTimeSeriesDatasets(data.node.id, path,orgNode.stoxID);
                             break;
                         case 4:
-                            console.log("data type");
+                           addCruiseDatasets(data.node.id, orgNode.text);
+                            break;
                     }
                 } else {
                     console.log("Dataset ");
@@ -117,7 +121,7 @@ $(document).ready(function () {
                     //Use switch in case we need special handling later for specific levels
                     switch (data.node.parents.length) {
                         case 3:
-                            addDatasetSummary(data.node.id, path);
+                            addDatasetSummary(data.node.id,"statusByCruise", path);
                             addChildrenWithCount(data.node.id, path);
                             break;
                         case 1:
@@ -153,7 +157,6 @@ $(document).ready(function () {
             fullPath: "/"},
         "last");
 
-    console.log("xxx",data.identified,data);
         var statPercent = Math.round(data.loaded / data.identified * 100.0);
         $('<div/>', {
             "data-type": "half",
@@ -175,9 +178,9 @@ $(document).ready(function () {
     });
 
 
-    var addDatasetSummary = function(par, path){
+    var addDatasetSummary = function(par,url, path){
          browseTree.create_node(par, {"type": "file",
-             text: "<a class='summaryLink' href='#' onClick='javascript:app.showSummary(\""+path+"\")'>Summary</a>",
+             text: "<a class='summaryLink' href='#' onClick='javascript:app.showSummary(\""+url+"\",\""+path+"\")'>Summary</a>",
              nop: true}
                 , 'last');
     };
@@ -293,30 +296,13 @@ $(document).ready(function () {
         callRest("SurveyTimeSeries/listCruise" + path, function (cruiseList) {
             for (var i = 0; i < cruiseList.length; i++)  {
                 cruiseNR = cruiseList[i];
-       
-                callRest("Cruise/mapByNR/" + cruiseNR, function (cruiseData) {
-
-                    callRest("list" + cruiseData, function (data) {
-                        var dataSetText;
-                        jQuery.each(data, function (name, value) {
-                            if (value != "N/A")
-                            {
-                                dataSetText = createDataLink(cruiseNR + "_" + name, value);
-                            }
-                            else
-                            {
-                                dataSetText =cruiseNR+"_"+ name + " Not loaded";
-                            }
-                            browseTree.create_node(par, {"type": "file", timeSeries: true,
-                                text: dataSetText
-                            }
-                            , 'last');
-                        });
-                        browseTree.open_node(par);
-
-                    });
-                });
+                browseTree.create_node(par, {text: cruiseNR, cruiseSeries: true,
+                    fullPath: path + "/" + cruiseNR}
+                , 'last');
+                
             }
+           browseTree.open_node(par);
+       
         });
     }
 
@@ -350,7 +336,6 @@ $(document).ready(function () {
 
     var createDataLink = function (name, value)
     {
-        console.log(name + " " + value);
         var result = name + " <a class='dataLink'  download='data.xml' href='" + value + "' target='_blank'>Link</a>";
         //    if (name == "cruise"){
 
@@ -360,11 +345,9 @@ $(document).ready(function () {
         return  result;
     };
     
-    app.showSummary = function (path) {
-        console.log("show summary");
-        console.log(path);
-          callRest("statusByCruise" + path, function (data) {
-         console.log(data);
+    app.showSummary = function (url,path) {
+ 
+         callRest(url + path, function (data) {
          var sumTable =  $("<table class='summaryTable'>");
          var head=  $("<tr class='summaryHeader' >");
          head.append("<th class='summaryHead' >Cruise Code</th>");
@@ -406,7 +389,7 @@ $(document).ready(function () {
                             of: window,
                             collision: "none"
                         },
-                        title: "Summary for "+path,
+                        title: "Summary for "+path.replace(/\\/,''),
                         buttons: {
                             "Ok": function ()
                             {

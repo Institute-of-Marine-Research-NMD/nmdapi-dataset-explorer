@@ -3,6 +3,7 @@ package no.imr.nmdapi.datasetexplorer.service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import no.imr.nmdapi.datasetexplorer.service.beans.CruiseDatasetStatus;
 
 /**
  * Service API for dataset explorer
@@ -36,6 +37,12 @@ public interface DatasetService {
     Map summarizeByCruise(String missionType, String year);
     
     List summarizeDatasetsStatus(String missionType, String year);
+    
+    CruiseDatasetStatus getCruiseStatus(String missionType, String year, String platform, String delivery);
+    
+    CruiseDatasetStatus getCruiseStatus(String cruisePath) ;
+    
+    
   
     Collection listCruiseDatasetTypes();
             

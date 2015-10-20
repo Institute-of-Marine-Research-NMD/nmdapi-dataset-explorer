@@ -1,5 +1,6 @@
 package no.imr.nmdapi.datasetexplorer.web.controller;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import no.imr.nmdapi.datasetexplorer.service.CruiseSeriesService;
 import no.imr.nmdapi.datasetexplorer.service.TimeSeriesService;
@@ -80,6 +81,18 @@ public class SurveyTimeSeriesController {
         return timeSeriesService.listSurveyTimeSeriesCruise(surveyTimeSeriesName,period);
     }
 
- 
+  /**
+     * List cruises for a Survey timeseries and time
+     * 
+     * @return
+     */
+    @RequestMapping(value = "/SurveyTimeSeries/summary/{surveyTimeSeriesName}/{period}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List  summarizeTimeSeries( @PathVariable(value = "surveyTimeSeriesName") String surveyTimeSeriesName,
+             @PathVariable(value = "period") String period) {
+        return timeSeriesService.summarizeDatasetsStatus(surveyTimeSeriesName, period);
+    }
+
     
 }

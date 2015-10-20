@@ -79,5 +79,18 @@ public class CruiseSeriesController {
         return cruiseSeriesService.listCruises(cruiseSeriesName,year);
     }
 
+    /**
+     * Summarize status of cruises for a cruise series and year
+     * 
+     * @return
+     */
+    @RequestMapping(value = "/CruiseSeries/summary/{cruiseSeriesName}/{year}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object summarizeCruiseSeries( @PathVariable(value = "cruiseSeriesName") String cruiseSeriesName,
+           @PathVariable(value = "year") String year ) {
+        return cruiseSeriesService.summarizeDatasetsStatus(cruiseSeriesName,year);
+    }
+    
     
 }

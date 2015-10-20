@@ -1,6 +1,7 @@
 package no.imr.nmdapi.datasetexplorer.service;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -13,5 +14,7 @@ public interface CruiseSeriesService {
     public Collection listCruiseSeriesYears(String cruiseSeriesName);
 
     public Collection listCruises(String cruiseSeriesName, String year);
+    
+    List summarizeDatasetsStatus(String cruiseSeriesName, String year);
     
 }

@@ -238,41 +238,62 @@ public class DatasetServiceImpl implements DatasetService {
         Collection<String> deliveryList;
 
         CruiseDatasetStatus cruiseStatus;
-        GregorianCalendar monthAgo = new GregorianCalendar();
-        monthAgo.add(Calendar.MONTH, -1);
 
         Collection<String> platformList = listPlatforms(missionType, year);
         for (String platform : platformList) {
             deliveryList = listDeliveries(missionType, year, platform);
             for (String delivery : deliveryList) {
-                //Warning abstraction leakage occuring
-                //TODO need to refactor to clean up leakage
-                CruiseType cruise = cruiseDAO.getCruiseDetailByCruisePath("/" + missionType + "/" + year + "/" + platform + "/" + delivery + "/");
-                if (cruise != null) {
-                    cruiseStatus = new CruiseDatasetStatus();
-                    cruiseStatus.setDelivery(delivery);
-                    cruiseStatus.setPlatform(platform);
-
-                    for (DatasetType dataset : cruise.getDatasets().getDataset()) {
-                        cruiseStatus.setExistsStatus(dataset.getDataType().name(),dataset.getCollected().name());
-                        if (checkDatasetFileExists(missionType, year, platform, delivery, dataset.getDataType().name().toLowerCase())) {
-                            cruiseStatus.setLoadedStatus(dataset.getDataType().name(),"Y");
-                        } else {
-                            //Hacky hand coding of status values
-                            if (cruise.getStopTime().toGregorianCalendar().after(monthAgo)) {
-                                //Cruise stopped less than month ago
-                               cruiseStatus.setLoadedStatus(dataset.getDataType().name(),"S");
-                            } else {
-                              cruiseStatus.setLoadedStatus(dataset.getDataType().name(),"L");
-                            }
-
-                        }
-                    }
+                cruiseStatus = getCruiseStatus(missionType, year, platform, delivery);
+                if (cruiseStatus != null) {
                     result.add(cruiseStatus);
                 }
             }
         }
         Collections.sort(result);
+        return result;
+    }
+
+    @Override
+    public  CruiseDatasetStatus getCruiseStatus(String cruisePath) {
+            
+        CruiseDatasetStatus result = null;
+        String[] parts = cruisePath.split("/");
+        if (parts.length == 5 ) {
+            result = getCruiseStatus(parts[1], parts[2],parts[3],parts[4]);
+        }
+        return result;
+    }
+    
+    
+   @Override
+    public  CruiseDatasetStatus getCruiseStatus(String missionType, String year, String platform, String delivery) {
+       
+        CruiseDatasetStatus result = null;
+        GregorianCalendar monthAgo = new GregorianCalendar();
+        monthAgo.add(Calendar.MONTH, -1);
+
+        CruiseType cruise = cruiseDAO.getCruiseDetailByCruisePath("/" + missionType + "/" + year + "/" + platform + "/" + delivery + "/");
+        if (cruise != null) {
+            result = new CruiseDatasetStatus();
+            result.setDelivery(delivery);
+            result.setPlatform(platform);
+
+            for (DatasetType dataset : cruise.getDatasets().getDataset()) {
+                result.setExistsStatus(dataset.getDataType().name(), dataset.getCollected().name());
+                if (checkDatasetFileExists(missionType, year, platform, delivery, dataset.getDataType().name().toLowerCase())) {
+                    result.setLoadedStatus(dataset.getDataType().name(), "Y");
+                } else {
+                    //Hacky hand coding of status values
+                    if (cruise.getStopTime().toGregorianCalendar().after(monthAgo)) {
+                        //Cruise stopped less than month ago
+                        result.setLoadedStatus(dataset.getDataType().name(), "S");
+                    } else {
+                        result.setLoadedStatus(dataset.getDataType().name(), "L");
+                    }
+
+                }
+            }
+        }
         return result;
     }
 
