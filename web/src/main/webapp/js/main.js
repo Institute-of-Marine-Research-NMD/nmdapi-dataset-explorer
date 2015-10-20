@@ -374,10 +374,10 @@ $(document).ready(function () {
          sumTable.append(head);        
            
                
-           jQuery.each(data, function (name, value) {
+           jQuery.each(data, function (index, value) {
                     var row =  $("<tr class='summaryRow' >");
                     var cellClass;
-                    row.append("<td class=' cruisecode' >"+name.toLowerCase()+"</td>");
+                    row.append("<td class=' cruisecode' >"+value.delivery+" "+value.platform+"</td>");
                     
                    for (var i=0;i<app.cruiseDatasetNames.length;i++) {
                           if (value.loaded[app.cruiseDatasetNames[i]]) {  // Do we know anything about dataset
