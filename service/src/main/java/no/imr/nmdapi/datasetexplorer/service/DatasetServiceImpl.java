@@ -3,14 +3,17 @@ package no.imr.nmdapi.datasetexplorer.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import no.imr.nmd.commons.cruise.jaxb.CruiseType;
 import no.imr.nmd.commons.cruise.jaxb.DatasetType;
 import no.imr.nmd.commons.cruise.jaxb.ExistsEnum;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseDAO;
 import no.imr.nmdapi.datasetexplorer.dao.DatasetDAO;
+import no.imr.nmdapi.datasetexplorer.service.beans.CruiseDatasetStatus;
 import no.imr.nmdapi.datasetexplorer.service.beans.ImportCount;
 import no.imr.nmdapi.datasetexplorer.service.beans.Level;
 
@@ -162,8 +165,9 @@ public class DatasetServiceImpl implements DatasetService {
     public ImportCount countLoaded(final String missionType, final String year, final String platform, final String delivery) {
         ImportCount result = new ImportCount();
 
+        String cruisePath = "/" + missionType + "/" + year + "/" + platform + "/" + delivery + "/";
         //First look at cruise for identified datasets
-        CruiseType cruise = cruiseDAO.getCruiseDetailByCruisePath("/" + missionType + "/" + year + "/" + platform + "/" + delivery + "/");
+        CruiseType cruise = cruiseDAO.getCruiseDetailByCruisePath(cruisePath);
         if (cruise != null) {
             result.incMissionCount();
     //    result.incIdentifed();
@@ -228,13 +232,12 @@ public class DatasetServiceImpl implements DatasetService {
     }
 
     @Override
-    public Map summarizeDatasetsStatus(String missionType, String year) {
-        HashMap<String, HashMap> result = new HashMap<String, HashMap>();
+    public List summarizeDatasetsStatus(String missionType, String year) {
+        List<CruiseDatasetStatus> result = new ArrayList<CruiseDatasetStatus>();
 
         Collection<String> deliveryList;
 
-        HashMap cruiseDatasetStatus;
-        String cruiseNR;
+        CruiseDatasetStatus cruiseStatus;
         GregorianCalendar monthAgo = new GregorianCalendar();
         monthAgo.add(Calendar.MONTH, -1);
 
@@ -242,43 +245,34 @@ public class DatasetServiceImpl implements DatasetService {
         for (String platform : platformList) {
             deliveryList = listDeliveries(missionType, year, platform);
             for (String delivery : deliveryList) {
-
-                cruiseDatasetStatus = new HashMap();
-
-                HashMap<String, String> datasetExists = new HashMap<String, String>();
-                HashMap<String, String> datasetLoaded = new HashMap<String, String>();
-
                 //Warning abstraction leakage occuring
                 //TODO need to refactor to clean up leakage
                 CruiseType cruise = cruiseDAO.getCruiseDetailByCruisePath("/" + missionType + "/" + year + "/" + platform + "/" + delivery + "/");
                 if (cruise != null) {
-
-                    cruiseNR = delivery + " " + platform;
+                    cruiseStatus = new CruiseDatasetStatus();
+                    cruiseStatus.setDelivery(delivery);
+                    cruiseStatus.setPlatform(platform);
 
                     for (DatasetType dataset : cruise.getDatasets().getDataset()) {
-
-                        datasetExists.put(dataset.getDataType().name(), dataset.getCollected().name());
+                        cruiseStatus.setExistsStatus(dataset.getDataType().name(),dataset.getCollected().name());
                         if (checkDatasetFileExists(missionType, year, platform, delivery, dataset.getDataType().name().toLowerCase())) {
-                            datasetLoaded.put(dataset.getDataType().name(), "Y");
+                            cruiseStatus.setLoadedStatus(dataset.getDataType().name(),"Y");
                         } else {
                             //Hacky hand coding of status values
                             if (cruise.getStopTime().toGregorianCalendar().after(monthAgo)) {
                                 //Cruise stopped less than month ago
-                                datasetLoaded.put(dataset.getDataType().name(), "S");
+                               cruiseStatus.setLoadedStatus(dataset.getDataType().name(),"S");
                             } else {
-                                datasetLoaded.put(dataset.getDataType().name(), "L");
+                              cruiseStatus.setLoadedStatus(dataset.getDataType().name(),"L");
                             }
 
                         }
                     }
-
-                    cruiseDatasetStatus.put("exists", datasetExists);
-                    cruiseDatasetStatus.put("loaded", datasetLoaded);
-                    
-                    result.put(cruiseNR, cruiseDatasetStatus);
+                    result.add(cruiseStatus);
                 }
             }
         }
+        Collections.sort(result);
         return result;
     }
 
