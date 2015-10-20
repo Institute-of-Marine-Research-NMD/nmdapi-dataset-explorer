@@ -28,7 +28,6 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
     private Configuration config; 
     
     private HashMap<String, String> cruisePathMap;
-    private HashMap<String, String> cruiseNRMap;
     HashMap<String,CruiseType> cruiseDetailMap;
    
 
@@ -39,7 +38,6 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
         LOG.debug("Mem"+used);
 
         HashMap<String, String> newCruisePathMap = new HashMap< String, String>();
-        HashMap<String, String> newCruiseNRMap = new HashMap< String, String>();
         HashMap<String,CruiseType> newCruiseDetailMap   = new HashMap<String, CruiseType>();
         
         String currentPath;
@@ -70,7 +68,6 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
                             CruiseType cruise = (CruiseType) JAXBIntrospector.getValue(cruiseUnMarshaller.unmarshal(filePath));
                             
                             newCruisePathMap.put(cruise.getCruiseCode(),"/"+expand("/", missionType, year, platform,delivery));
-                            newCruiseNRMap.put("/"+expand("/", missionType, year, platform,delivery),cruise.getCruiseCode());
                             newCruiseDetailMap.put("/"+expand("/", missionType, year, platform,delivery),cruise);
                             
                             
@@ -83,7 +80,6 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
             }
         
         cruisePathMap = newCruisePathMap;
-        cruiseNRMap = newCruiseNRMap;
         cruiseDetailMap = newCruiseDetailMap;
         LOG.debug("End update");
         used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
@@ -105,10 +101,10 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
    public Object getCruiseByCruisePath(String cruisePath) {
         
         String result="";
-        
-        if (cruiseNRMap.containsKey(cruisePath)){
-            result = cruiseNRMap.get(cruisePath);
+       if (cruiseDetailMap.containsKey(cruisePath)){
+            result = cruiseDetailMap.get(cruisePath).getCruiseCode();
         }
+        
         return result;    
     }
   

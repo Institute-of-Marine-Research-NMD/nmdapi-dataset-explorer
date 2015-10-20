@@ -29,7 +29,7 @@ public class CamelConfig extends SingleRouteCamelConfiguration{
                 CronScheduledRoutePolicy startPolicy = new CronScheduledRoutePolicy();
                 startPolicy.setRouteStartTime(config.getString("cron.activation.time"));
                 
-                 from("timer://runOnce?repeatCount=1&delay=5000")
+                 from("timer://runOnce?repeatCount=1&delay=5000").routePolicy(startPolicy)
                          .to("bean:datasetDAO?method=updateDataset")
                          .to("bean:cruiseSeriesDAO?method=updateCruiseSeries")
                          .to("bean:surveyTimeSeriesDAO?method=updateTimeSeries")
