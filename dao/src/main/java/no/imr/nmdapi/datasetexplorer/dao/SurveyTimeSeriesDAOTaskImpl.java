@@ -41,8 +41,9 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
         LOG.debug("Start update time series");
           Runtime rt = Runtime.getRuntime();
          long used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem "+used);
-    
+          LOG.debug("Memory usage before update:"+used);
+
+                        
         
         HashMap<String, ArrayList<String>> newUrlList = new HashMap< String, ArrayList<String>>();
         HashMap<String, ArrayList<SurveyTimeSeriesSample>> newSampleList = new HashMap< String, ArrayList<SurveyTimeSeriesSample>>();
@@ -52,7 +53,6 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
             
             String dataFilePath =config.getString("timeseries.base.filePath") + name+ "/data.xml";
             File path = new File(dataFilePath);
-            LOG.debug("survey "+dataFilePath);
             try {
             SurveyTimeSeriesType surveyTimeSeries = (SurveyTimeSeriesType) JAXBIntrospector.getValue(surveytimeseriesUnMarshaller.unmarshal(path));
             
@@ -80,7 +80,7 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
             
         }
          used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem "+used);
+         LOG.debug("Memory usage after update:"+used);
     
         urlList = newUrlList;
         sampleTimeMap = newSampleList;

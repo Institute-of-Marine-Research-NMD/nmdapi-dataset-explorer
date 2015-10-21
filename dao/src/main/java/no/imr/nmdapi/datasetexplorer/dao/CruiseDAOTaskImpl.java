@@ -35,7 +35,7 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
         LOG.debug("Start update Cruises");
                  Runtime rt = Runtime.getRuntime();
          long used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem"+used);
+        LOG.debug("Memory usage before update:"+used);
 
         HashMap<String, String> newCruisePathMap = new HashMap< String, String>();
         HashMap<String,CruiseType> newCruiseDetailMap   = new HashMap<String, CruiseType>();
@@ -83,7 +83,7 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
         cruiseDetailMap = newCruiseDetailMap;
         LOG.debug("End update");
         used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem"+used);
+        LOG.debug("Memory used after update:"+used);
 
 
     }

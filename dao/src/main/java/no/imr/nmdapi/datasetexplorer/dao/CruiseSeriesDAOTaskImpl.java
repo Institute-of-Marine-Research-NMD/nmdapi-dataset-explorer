@@ -40,8 +40,8 @@ public class CruiseSeriesDAOTaskImpl implements CruiseSeriesDAO {
         LOG.debug("Start update Cruise series");
         Runtime rt = Runtime.getRuntime();
         long used = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem " + used);
-
+        LOG.debug("Memory usage before update:"+used);
+ 
         HashMap<String, ArrayList<String>> newUrlList = new HashMap< String, ArrayList<String>>();
         ArrayList<String> yearList;
         String year;
@@ -64,9 +64,7 @@ public class CruiseSeriesDAOTaskImpl implements CruiseSeriesDAO {
 
             CruiseSeriesType cruiseSeriesSet;
             try {
-
-                LOG.debug("cruise path" + path);
-                CruiseSerieType cruiseSeries = (CruiseSerieType) JAXBIntrospector.getValue(cruiseseriesUnMarshaller.unmarshal(path));
+               CruiseSerieType cruiseSeries = (CruiseSerieType) JAXBIntrospector.getValue(cruiseseriesUnMarshaller.unmarshal(path));
 
                 List<SampleType> sampleList = cruiseSeries.getSamples().getSample();
                 yearList = new ArrayList<String>();
@@ -95,8 +93,7 @@ public class CruiseSeriesDAOTaskImpl implements CruiseSeriesDAO {
         urlList = newUrlList;
         LOG.debug("End update");
         used = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem" + used);
-
+        LOG.debug("Memory usage after update:"+used);
     }
 
     public Collection listCruiseSeries() {

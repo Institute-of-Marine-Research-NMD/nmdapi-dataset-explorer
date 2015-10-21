@@ -47,7 +47,7 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
         LOG.debug("Start update dataset");
           Runtime rt = Runtime.getRuntime();
          long used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem "+used);
+         LOG.debug("Memory usage before update:"+used);
     
         HashMap<String, ArrayList<String>> newUrlList = new HashMap< String, ArrayList<String>>();
         HashSet<String> newFileExistsDatasets = new HashSet<String>();
@@ -102,7 +102,7 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
         fileExistsDatasets = newFileExistsDatasets;
         
       used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-        LOG.debug("Mem "+used);
+       LOG.debug("Memory usage after update:"+used);
     
         LOG.debug("End update");
 
