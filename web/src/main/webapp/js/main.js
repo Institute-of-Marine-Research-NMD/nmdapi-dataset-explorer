@@ -290,7 +290,7 @@ $(document).ready(function () {
     var addTimeSeriesDatasets = function (par, path,stoxID)
     {
         browseTree.create_node(par, {"type": "file", timeSeries: true,
-            text: createDataLink("Stox",    app.stoxURL+stoxID)}
+            text: createDataLink("Stox",    app.stoxURL+stoxID), nop: true}
                             , 'last');
         
         callRest("SurveyTimeSeries/listCruise" + path, function (cruiseList) {
