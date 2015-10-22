@@ -2,13 +2,11 @@ var app = {};
 $(document).ready(function () {
 
 
-    app.cruiseDatasetNames=[];;
+    app.cruiseDatasetNames = [];
+  
 
     app.baseURL = "../";
-    app.stoxURL=location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+"/apis/nmdapi/stox/v1/";
-
-
-
+ 
     // unblock when ajax activity stops 
     $(document).ajaxStop($.unblockUI);
 
@@ -60,25 +58,27 @@ $(document).ready(function () {
             });
         });
     };
-    
-      callRest("listCruiseDatsetTypes", function (data) {
-          app.cruiseDatasetNames = data;
-        });
+
+    callRest("listCruiseDatsetTypes", function (data) {
+        app.cruiseDatasetNames = data;
+    });
 
     //Setup expand node handling
     $("#browseTree").bind(
             "select_node.jstree", function (evt, data) {
                 var par = data.node.id;
-                //Check if already expanded
-                if (data.node.children.length > 0)
-                {
+                var orgNode = browseTree.get_node(data.node.id).original;
+                if (orgNode.nop) {
                     return;
                 }
-               var orgNode = browseTree.get_node(data.node.id).original;
 
-                if (orgNode.nop) {
-                   return;
+                //Check if already expanded
+                if ((data.node.children.length > 0) && (!orgNode.prepop))
+                {
+                    browseTree.open_node(par);
+                    return;
                 }
+
                 var path = orgNode.fullPath;
                 //    console.log(orgNode);
                 if (orgNode.cruiseSeries) {
@@ -86,10 +86,10 @@ $(document).ready(function () {
                     switch (data.node.parents.length) {
                         case 1:
                         case 2:
-                           addCruiseSeries(data.node.id, path);
+                            addCruiseSeries(data.node.id, path);
                             break;
                         case 3:
-                            addDatasetSummary(data.node.id,"CruiseSeries/summary", path);
+                            addDatasetSummary(data.node.id, "CruiseSeries/summary", path);
                             addCruiseSeries(data.node.id, path);
                             break;
                         case 4:
@@ -108,11 +108,10 @@ $(document).ready(function () {
                             addTimeSeriesSamples(data.node.id, path);
                             break;
                         case 3:
-                            addDatasetSummary(data.node.id,"SurveyTimeSeries/summary", path);
-                            addTimeSeriesDatasets(data.node.id, path,orgNode.stoxID);
+                            addTimeSeriesDatasets(data.node.id, path);
                             break;
                         case 4:
-                           addCruiseDatasets(data.node.id, orgNode.text);
+                            addCruiseDatasets(data.node.id, orgNode.text);
                             break;
                     }
                 } else {
@@ -121,7 +120,7 @@ $(document).ready(function () {
                     //Use switch in case we need special handling later for specific levels
                     switch (data.node.parents.length) {
                         case 3:
-                            addDatasetSummary(data.node.id,"statusByCruise", path);
+                            addDatasetSummary(data.node.id, "statusByCruise", path);
                             addChildrenWithCount(data.node.id, path);
                             break;
                         case 1:
@@ -139,7 +138,7 @@ $(document).ready(function () {
 
 
                 }
- 
+
 
             }
     );
@@ -178,11 +177,11 @@ $(document).ready(function () {
     });
 
 
-    var addDatasetSummary = function(par,url, path){
-         browseTree.create_node(par, {"type": "file",
-             text: "<a class='summaryLink' href='#' onClick='javascript:app.showSummary(\""+url+"\",\""+path+"\")'>Summary</a>",
-             nop: true}
-                , 'last');
+    var addDatasetSummary = function (par, url, path) {
+        browseTree.create_node(par, {"type": "file",
+            text: "<a class='summaryLink' href='#' onClick='javascript:app.showSummary(\"" + url + "\",\"" + path + "\")'>Summary</a>",
+            nop: true}
+        , 'last');
     };
 
 
@@ -268,17 +267,31 @@ $(document).ready(function () {
         });
     }
 
-   var addTimeSeriesSamples = function (par, path)
+    var addTimeSeriesSamples = function (par, path)
     {
 
-        var countText;
         callRest("SurveyTimeSeries/listSamples" + path, function (data) {
             for (var i = 0; i < data.length; i++)
             {
                 countText = data[i].sampleTime;
-               var x= browseTree.create_node(par, {text: countText, timeSeries: true,
-                    fullPath: path + "/" + data[i].sampleTime,stoxID:data[i].stoxID}
+                var newNode = browseTree.create_node(par,
+                        {text: countText,
+                            timeSeries: true,
+                            fullPath: path + "/" + data[i].sampleTime,
+                            prepop: true}
                 , 'last');
+
+                addDatasetSummary(newNode, "SurveyTimeSeries/summary", path + "/" + data[i].sampleTime);
+
+                browseTree.create_node(newNode, {"type": "file", timeSeries: true,
+                    text: createDataLink("Stox",data[i].stoxURL), nop: true}
+                , 'last');
+
+                browseTree.create_node(newNode, {"type": "file", timeSeries: true,
+                    text: createDownloadLink("Zip ", data[i].zipURL), nop: true}
+                , 'last');
+
+
             }
             browseTree.open_node(par);
         });
@@ -287,22 +300,19 @@ $(document).ready(function () {
 
 
 //Ugly hack need to refactor so easier to read
-    var addTimeSeriesDatasets = function (par, path,stoxID)
+    var addTimeSeriesDatasets = function (par, path)
     {
-        browseTree.create_node(par, {"type": "file", timeSeries: true,
-            text: createDataLink("Stox",    app.stoxURL+stoxID), nop: true}
-                            , 'last');
-        
+
         callRest("SurveyTimeSeries/listCruise" + path, function (cruiseList) {
-            for (var i = 0; i < cruiseList.length; i++)  {
+            for (var i = 0; i < cruiseList.length; i++) {
                 cruiseNR = cruiseList[i];
                 browseTree.create_node(par, {text: cruiseNR, cruiseSeries: true,
                     fullPath: path + "/" + cruiseNR}
                 , 'last');
-                
+
             }
-           browseTree.open_node(par);
-       
+            browseTree.open_node(par);
+
         });
     }
 
@@ -334,6 +344,12 @@ $(document).ready(function () {
         });
     };
 
+    var createDownloadLink = function (name, value)
+    {
+        return   name + " <a class='downloadLink' href='" + value + "'  onClick='javascript:app.downloadFile(event)'  >Download</a>";
+    };
+
+
     var createDataLink = function (name, value)
     {
         var result = name + " <a class='dataLink'  download='data.xml' href='" + value + "' target='_blank'>Link</a>";
@@ -342,64 +358,67 @@ $(document).ready(function () {
         result = name + " <a class='dataLink' href='" + value + "' onClick='javascript:app.showData(event)'>Link</a>"
 
         //  }
-        return  result;
+        return   name + " <a class='dataLink' href='" + value + "' onClick='javascript:app.showData(event)'>Link</a>";
     };
-    
-    app.showSummary = function (url,path) {
- 
-         callRest(url + path, function (data) {
-         var sumTable =  $("<table class='summaryTable'>");
-         var head=  $("<tr class='summaryHeader' >");
-         head.append("<th class='summaryHead' >Cruise Code</th>");
-          for (var i=0;i<app.cruiseDatasetNames.length;i++) {
-                head.append("<th class='summaryHead' >"+app.cruiseDatasetNames[i]+"</th>");
-         }
-         sumTable.append(head);        
-           
-               
-           jQuery.each(data, function (index, value) {
-                    var row =  $("<tr class='summaryRow' >");
-                    var cellClass;
-                    row.append("<td class=' cruisecode' >"+value.delivery+" "+value.platform+"</td>");
-                    
-                   for (var i=0;i<app.cruiseDatasetNames.length;i++) {
-                          if (value.loaded[app.cruiseDatasetNames[i]]) {  // Do we know anything about dataset
-                              cellClass = value.loaded[app.cruiseDatasetNames[i]]+"_"+value.exists[app.cruiseDatasetNames[i]];
-                             row.append("<td class='summaryCell "+cellClass+"' >");
-                          } else {
-                             row.append("<td class='summaryCell UNKNOWN' >");
-                          }
-                     }
-    
-                    sumTable.append(row);
-                });
-                 var sumDialog =  $("<div>");
-                 sumDialog.append(sumTable);
-      
-               sumDialog.dialog({
-                        autoOpen: true,
-                        modal: true,
-                        dialogClass: 'fixed-dialog',
-                        height: 625,
-                        maxHeight: 700,
-                        width: 650,
-                        position: {
-                            my: "left top",
-                            at: "left+200 top+100",
-                            of: window,
-                            collision: "none"
-                        },
-                        title: "Summary for "+path.replace(/\\/,''),
-                        buttons: {
-                            "Ok": function ()
-                            {
-                                $(this).dialog("close");
-                            }}
-                    });
-                  sumDialog.dialog('open');
-    });
+
+    app.showSummary = function (url, path) {
+
+        callRest(url + path, function (data) {
+            var sumTable = $("<table class='summaryTable'>");
+            var head = $("<tr class='summaryHeader' >");
+            head.append("<th class='summaryHead' >Cruise Code</th>");
+            for (var i = 0; i < app.cruiseDatasetNames.length; i++) {
+                head.append("<th class='summaryHead' >" + app.cruiseDatasetNames[i] + "</th>");
+            }
+            sumTable.append(head);
+
+
+            jQuery.each(data, function (index, value) {
+                var row = $("<tr class='summaryRow' >");
+                var cellClass;
+                row.append("<td class=' cruisecode' >" + value.delivery + " " + value.platform + "</td>");
+
+                for (var i = 0; i < app.cruiseDatasetNames.length; i++) {
+                    if (value.loaded[app.cruiseDatasetNames[i]]) {  // Do we know anything about dataset
+                        cellClass = value.loaded[app.cruiseDatasetNames[i]] + "_" + value.exists[app.cruiseDatasetNames[i]];
+                        row.append("<td class='summaryCell " + cellClass + "' >");
+                    } else {
+                        row.append("<td class='summaryCell UNKNOWN' >");
+                    }
+                }
+
+                sumTable.append(row);
+            });
+            var sumDialog = $("<div>");
+            sumDialog.append(sumTable);
+
+            sumDialog.dialog({
+                autoOpen: true,
+                modal: true,
+                dialogClass: 'fixed-dialog',
+                height: 625,
+                maxHeight: 700,
+                width: 650,
+                position: {
+                    my: "left top",
+                    at: "left+200 top+100",
+                    of: window,
+                    collision: "none"
+                },
+                title: "Summary for " + path.replace(/\\/, ''),
+                buttons: {
+                    "Ok": function ()
+                    {
+                        $(this).dialog("close");
+                    }}
+            });
+            sumDialog.dialog('open');
+        });
     }
-    
+
+    app.downloadFile = function (ev) {
+        window.location.href = ev.srcElement.href;
+    }
 
     app.showData = function (ev) {
         var dataUrl = ev.srcElement.href;
