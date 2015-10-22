@@ -7,6 +7,8 @@ package no.imr.nmdapi.datasetexplorer.dao.pojo;
 public class SurveyTimeSeriesSample {
 
     String stoxID;
+    String stoxURL;
+    String zipURL;
     String sampleTime;
 
     public String getSampleTime() {
@@ -23,6 +25,22 @@ public class SurveyTimeSeriesSample {
 
     public void setStoxID(String stoxID) {
         this.stoxID = stoxID;
+    }
+
+    public String getStoxURL() {
+        return stoxURL;
+    }
+
+    public void setStoxURL(String stoxURL) {
+        this.stoxURL = stoxURL;
+    }
+
+    public String getZipURL() {
+        return zipURL;
+    }
+
+    public void setZipURL(String zipURL) {
+        this.zipURL = zipURL;
     }
     
      

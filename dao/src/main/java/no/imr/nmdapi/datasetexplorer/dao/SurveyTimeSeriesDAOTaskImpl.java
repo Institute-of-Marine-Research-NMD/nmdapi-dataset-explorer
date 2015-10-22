@@ -64,6 +64,13 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
                     SurveyTimeSeriesSample sample = new SurveyTimeSeriesSample();
                     sample.setStoxID(surveySample.getStoxProjectId());
                     sample.setSampleTime(surveySample.getSampleTime());
+                    sample.setStoxURL(config.getString("surveytimeseries.stox.base.url")
+                            .concat(surveySample.getStoxProjectId()));
+                    sample.setZipURL(config.getString("surveytimeseries.zip.base.url")
+                            .concat(surveyTimeSeries.getSurveytimeseriesname())
+                            .concat("/samples/")
+                            .concat(surveySample.getSampleTime())
+                            .concat("?format=zip"));
                     sampleList.add(sample);
                 }
 
