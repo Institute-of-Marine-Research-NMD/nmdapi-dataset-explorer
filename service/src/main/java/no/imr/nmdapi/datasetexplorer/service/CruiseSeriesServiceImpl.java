@@ -38,6 +38,32 @@ public class CruiseSeriesServiceImpl implements CruiseSeriesService {
      return cruiseSeriesDAO.listCruises(cruiseSeriesName, year);
     }
     
+       
+   public List summarizeDatasetsStatus(String cruiseSeriesName) {
+        List<CruiseDatasetStatus> result = new ArrayList<CruiseDatasetStatus>();
+
+        CruiseDatasetStatus cruiseStatus;
+        String cruisePath;
+
+        Collection<String> years = cruiseSeriesDAO.listCruiseSeriesYears(cruiseSeriesName);
+        for (String year:years) {
+        
+        Collection<String> cruiseList = cruiseSeriesDAO.listCruises(cruiseSeriesName, year);
+        
+       for (String cruise:cruiseList) {
+           cruiseStatus = new CruiseDatasetStatus();
+           cruisePath =  (String) cruiseDAO.getCruiseByCruiseNR(cruise);
+           cruiseStatus = datasetService.getCruiseStatus(cruisePath);
+           if (cruiseStatus != null) {
+               result.add(cruiseStatus);
+            }
+       }
+        }
+        Collections.sort(result);
+        return result;
+    }
+    
+    
     
    public List summarizeDatasetsStatus(String cruiseSeriesName, String year) {
         List<CruiseDatasetStatus> result = new ArrayList<CruiseDatasetStatus>();

@@ -12,6 +12,10 @@ public interface SurveyTimeSeriesDAO {
 
     public Collection listSurveryTimeSeriesTimes(String surveyTimeSeriesName);
 
+    public Collection listSurveryTimeSeriesTimePeriod(String surveyTimeSeriesName);
+        
     public Collection<String> listCruisesSeries(String surveyTimeSeriesName) ;
+    
+    
 
 }

@@ -82,10 +82,12 @@ $(document).ready(function () {
                 var path = orgNode.fullPath;
                 //    console.log(orgNode);
                 if (orgNode.cruiseSeries) {
-                    console.log("Cruise series");
                     switch (data.node.parents.length) {
                         case 1:
+                            addCruiseSeries(data.node.id, path);
+                            break;
                         case 2:
+                            addDatasetSummary(data.node.id, "CruiseSeries/summary", path);
                             addCruiseSeries(data.node.id, path);
                             break;
                         case 3:
@@ -98,8 +100,6 @@ $(document).ready(function () {
                         case 5:
                     }
                 } else if (orgNode.timeSeries) {
-                    console.log("Time series");
-
                     switch (data.node.parents.length) {
                         case 1:
                             addTimeSeries(data.node.id, path);
@@ -115,8 +115,6 @@ $(document).ready(function () {
                             break;
                     }
                 } else {
-                    console.log("Dataset ");
-
                     //Use switch in case we need special handling later for specific levels
                     switch (data.node.parents.length) {
                         case 3:
@@ -131,8 +129,6 @@ $(document).ready(function () {
                         case 5:
                             addDatasets(data.node.id, path);
                             break;
-                        case 6:
-                            console.log("data type");
                     }
 
 
@@ -269,7 +265,8 @@ $(document).ready(function () {
 
     var addTimeSeriesSamples = function (par, path)
     {
-
+     addDatasetSummary(par, "SurveyTimeSeries/summary", path);
+   
         callRest("SurveyTimeSeries/listSamples" + path, function (data) {
             for (var i = 0; i < data.length; i++)
             {
@@ -352,13 +349,7 @@ $(document).ready(function () {
 
     var createDataLink = function (name, value)
     {
-        var result = name + " <a class='dataLink'  download='data.xml' href='" + value + "' target='_blank'>Link</a>";
-        //    if (name == "cruise"){
-
-        result = name + " <a class='dataLink' href='" + value + "' onClick='javascript:app.showData(event)'>Link</a>"
-
-        //  }
-        return   name + " <a class='dataLink' href='" + value + "' onClick='javascript:app.showData(event)'>Link</a>";
+         return   name + " <a class='dataLink' href='" + value + "' onClick='javascript:app.showData(event)'>Link</a>";
     };
 
     app.showSummary = function (url, path) {
@@ -422,9 +413,6 @@ $(document).ready(function () {
 
     app.showData = function (ev) {
         var dataUrl = ev.srcElement.href;
-        console.log("show data");
-        //   window.open(dataUrl);
-
         $.ajax({
             url: dataUrl,
             dataType: "text"

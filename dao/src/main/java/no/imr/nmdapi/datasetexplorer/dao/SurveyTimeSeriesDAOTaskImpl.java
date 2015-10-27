@@ -34,7 +34,9 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
     private Configuration config;
 
     private HashMap<String, ArrayList<String>> urlList;
-     HashMap<String, ArrayList<SurveyTimeSeriesSample>> sampleTimeMap = new HashMap< String, ArrayList<SurveyTimeSeriesSample>>();
+    HashMap<String, ArrayList<SurveyTimeSeriesSample>> sampleTimeMap = new HashMap< String, ArrayList<SurveyTimeSeriesSample>>();
+    HashMap<String, ArrayList<String>> samplePeriodMap = new HashMap< String, ArrayList<String>>();
+    
  
     
     public void updateTimeSeries() {
@@ -47,6 +49,8 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
         
         HashMap<String, ArrayList<String>> newUrlList = new HashMap< String, ArrayList<String>>();
         HashMap<String, ArrayList<SurveyTimeSeriesSample>> newSampleList = new HashMap< String, ArrayList<SurveyTimeSeriesSample>>();
+        HashMap<String, ArrayList<String>> newSamplePeriodList = new HashMap< String, ArrayList<String>>();
+        
         
         File filePath = new File(config.getString("timeseries.base.filePath") );
         for (String name : filePath.list()) {
@@ -58,6 +62,8 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
             
                ArrayList<String> cruiseSeriesNameList  = new ArrayList<String>();
                ArrayList<SurveyTimeSeriesSample> sampleList  = new ArrayList<SurveyTimeSeriesSample>();
+               ArrayList<String> periodList  = new ArrayList<String>();
+               
     
                 List<SampleType> surveySampleList = surveyTimeSeries.getSamples().getSampleType();
                 for (SampleType surveySample:surveySampleList) {
@@ -72,6 +78,9 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
                             .concat(surveySample.getSampleTime())
                             .concat("?format=zip"));
                     sampleList.add(sample);
+                    periodList.add(surveySample.getSampleTime());
+                    
+                    
                 }
 
                 List<CruiseSeriesDescriptionType> surveyCruiseSeriesList = surveyTimeSeries.getCruiseSeries().getCruiseSeriesS();
@@ -80,6 +89,7 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
                 }
                 newUrlList.put(name, cruiseSeriesNameList);
                 newSampleList.put(name, sampleList);
+                newSamplePeriodList.put(name, periodList);
             } catch (JAXBException ex) {
               ex.printStackTrace();
                 //TODO handle this better
@@ -91,6 +101,7 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
     
         urlList = newUrlList;
         sampleTimeMap = newSampleList;
+        samplePeriodMap = newSamplePeriodList;
 
         LOG.debug("End update");
     }
@@ -103,6 +114,10 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
         return sampleTimeMap.get(surveyTimeSeriesName);
     }
 
+      public Collection listSurveryTimeSeriesTimePeriod(String surveyTimeSeriesName) {
+        return samplePeriodMap.get(surveyTimeSeriesName);
+    }
+    
     public Collection listCruisesSeries(String surveyTimeSeriesName) {
         return urlList.get(surveyTimeSeriesName);
     }

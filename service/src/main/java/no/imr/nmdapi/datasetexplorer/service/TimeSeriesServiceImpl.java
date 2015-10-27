@@ -59,6 +59,20 @@ public class TimeSeriesServiceImpl implements TimeSeriesService {
         Collections.sort(result);
         return result;
     }
+    
+     public List summarizeDatasetsStatus(String surveyTimeSeriesName) {
+        List<CruiseDatasetStatus> result = new ArrayList<CruiseDatasetStatus>();
+
+        Collection<String>  periods = surveyTimeSeriesDAO.listSurveryTimeSeriesTimePeriod(surveyTimeSeriesName);
+        for (String  period :periods) {
+            Collection<String> cruiseSeriesList = surveyTimeSeriesDAO.listCruisesSeries(surveyTimeSeriesName);
+        for ( String cruiseSeries:cruiseSeriesList) {
+           result.addAll(cruiseSeriesService.summarizeDatasetsStatus(cruiseSeries, period));
+        }
+     }  
+        Collections.sort(result);
+        return result;
+    }
 
     
 }

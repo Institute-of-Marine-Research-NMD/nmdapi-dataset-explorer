@@ -14,7 +14,9 @@ public interface CruiseSeriesService {
     public Collection listCruiseSeriesYears(String cruiseSeriesName);
 
     public Collection listCruises(String cruiseSeriesName, String year);
-    
+   
+    List summarizeDatasetsStatus(String cruiseSeriesName);
+     
     List summarizeDatasetsStatus(String cruiseSeriesName, String year);
     
 }

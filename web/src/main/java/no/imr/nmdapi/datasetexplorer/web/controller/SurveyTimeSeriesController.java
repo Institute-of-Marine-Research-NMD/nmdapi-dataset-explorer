@@ -95,4 +95,17 @@ public class SurveyTimeSeriesController {
     }
 
     
+  /**
+     * List cruises for a Survey timeseries
+     * 
+     * @return
+     */
+    @RequestMapping(value = "/SurveyTimeSeries/summary/{surveyTimeSeriesName}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List  summarizeSurvetTimeSeries( @PathVariable(value = "surveyTimeSeriesName") String surveyTimeSeriesName)  {
+        return timeSeriesService.summarizeDatasetsStatus(surveyTimeSeriesName);
+    }
+    
+    
 }

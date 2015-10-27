@@ -20,5 +20,7 @@ public interface TimeSeriesService {
     public Collection listSurveyTimeSeriesCruise(String surveyTimeSeriesName,String period);
     
     public List summarizeDatasetsStatus(String surveyTimeSeriesName, String period);
-    
+  
+     public List summarizeDatasetsStatus(String surveyTimeSeriesName);
+  
 }
