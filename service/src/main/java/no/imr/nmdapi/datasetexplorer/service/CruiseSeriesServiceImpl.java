@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseDAO;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseSeriesDAO;
+import no.imr.nmdapi.datasetexplorer.dao.pojo.ShipIdentifer;
 import no.imr.nmdapi.datasetexplorer.service.beans.CruiseDatasetStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,11 +49,11 @@ public class CruiseSeriesServiceImpl implements CruiseSeriesService {
         Collection<String> years = cruiseSeriesDAO.listCruiseSeriesYears(cruiseSeriesName);
         for (String year:years) {
         
-        Collection<String> cruiseList = cruiseSeriesDAO.listCruises(cruiseSeriesName, year);
+        Collection<ShipIdentifer> cruiseList = cruiseSeriesDAO.listCruises(cruiseSeriesName, year);
         
-       for (String cruise:cruiseList) {
+       for ( ShipIdentifer cruise:cruiseList) {
            cruiseStatus = new CruiseDatasetStatus();
-           cruisePath =  (String) cruiseDAO.getCruiseByCruiseNR(cruise);
+           cruisePath =  (String) cruiseDAO.getCruiseByCruiseNR(cruise.getCruiseCode(),cruise.getShipName());
            cruiseStatus = datasetService.getCruiseStatus(cruisePath);
            if (cruiseStatus != null) {
                result.add(cruiseStatus);
@@ -63,18 +64,18 @@ public class CruiseSeriesServiceImpl implements CruiseSeriesService {
         return result;
     }
     
-    
+     
     
    public List summarizeDatasetsStatus(String cruiseSeriesName, String year) {
         List<CruiseDatasetStatus> result = new ArrayList<CruiseDatasetStatus>();
 
         CruiseDatasetStatus cruiseStatus;
         String cruisePath;
-        Collection<String> cruiseList = cruiseSeriesDAO.listCruises(cruiseSeriesName, year);
+        Collection<ShipIdentifer> cruiseList = cruiseSeriesDAO.listCruises(cruiseSeriesName, year);
         
-       for (String cruise:cruiseList) {
+       for (ShipIdentifer cruise:cruiseList) {
            cruiseStatus = new CruiseDatasetStatus();
-           cruisePath =  (String) cruiseDAO.getCruiseByCruiseNR(cruise);
+           cruisePath =  (String) cruiseDAO.getCruiseByCruiseNR(cruise.getCruiseCode(),cruise.getShipName());
            cruiseStatus = datasetService.getCruiseStatus(cruisePath);
            if (cruiseStatus != null) {
                result.add(cruiseStatus);
@@ -85,6 +86,6 @@ public class CruiseSeriesServiceImpl implements CruiseSeriesService {
         return result;
     }
     
-    
+      
 
 }

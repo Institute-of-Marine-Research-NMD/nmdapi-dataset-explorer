@@ -8,7 +8,7 @@ import no.imr.nmd.commons.cruise.jaxb.CruiseType;
  */
 public interface CruiseDAO {
 
-    public Object getCruiseByCruiseNR(String cruiseNR);
+    public Object getCruiseByCruiseNR(String cruiseNR,String shipName);
  
    public Object getCruiseByCruisePath(String cruisePath);
 

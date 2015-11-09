@@ -92,10 +92,10 @@ $(document).ready(function () {
                             break;
                         case 3:
                             addDatasetSummary(data.node.id, "CruiseSeries/summary", path);
-                            addCruiseSeries(data.node.id, path);
+                            addCruiseSeriesCruises(data.node.id, path);
                             break;
                         case 4:
-                            addCruiseDatasets(data.node.id, orgNode.text);
+                            addCruiseDatasets(data.node.id, orgNode.shipID);
                             break;
                         case 5:
                     }
@@ -111,7 +111,7 @@ $(document).ready(function () {
                             addTimeSeriesDatasets(data.node.id, path);
                             break;
                         case 4:
-                            addCruiseDatasets(data.node.id, orgNode.text);
+                            addCruiseDatasets(data.node.id, orgNode.shipID);
                             break;
                     }
                 } else {
@@ -201,14 +201,28 @@ $(document).ready(function () {
 
     var addCruiseSeries = function (par, path)
     {
+        callRest("CruiseSeries/list" + path, function (data) {
+            for (var i = 0; i < data.length; i++)
+            {
+                console.log(data[i])
+                browseTree.create_node(par, {text: data[i], cruiseSeries: true,
+                    fullPath: path + "/" + data[i]}
+                , 'last');
+            }
+            browseTree.open_node(par);
+        });
+    }
 
+
+    var addCruiseSeriesCruises = function (par, path)
+    {
         var countText;
         callRest("CruiseSeries/list" + path, function (data) {
             for (var i = 0; i < data.length; i++)
             {
-                countText = data[i];
+                countText = data[i].cruiseCode;
                 browseTree.create_node(par, {text: countText, cruiseSeries: true,
-                    fullPath: path + "/" + data[i]}
+                    shipID: data[i].cruiseCode+"/" + data[i].shipName}
                 , 'last');
             }
             browseTree.open_node(par);
@@ -219,6 +233,7 @@ $(document).ready(function () {
 
     var addCruiseDatasets = function (par, cruiseNR)
     {
+        console.log(cruiseNR);
         callRest("Cruise/mapByNR/" + cruiseNR, function (cruiseData) {
 
             callRest("list" + cruiseData, function (data) {
@@ -227,8 +242,6 @@ $(document).ready(function () {
                     if (value != "N/A")
                     {
                         dataSetText = createDataLink(name, value);
-
-                        //                      dataSetText = name + " <a class='dataLink' href='" + value + "' target='_blank'>Link</a>";
                     }
                     else
                     {
@@ -302,9 +315,9 @@ $(document).ready(function () {
 
         callRest("SurveyTimeSeries/listCruise" + path, function (cruiseList) {
             for (var i = 0; i < cruiseList.length; i++) {
-                cruiseNR = cruiseList[i];
+                cruiseNR = cruiseList[i].cruiseCode;
                 browseTree.create_node(par, {text: cruiseNR, cruiseSeries: true,
-                    fullPath: path + "/" + cruiseNR}
+                    shipID:cruiseList[i].cruiseCode + "/" + cruiseList[i].shipName}
                 , 'last');
 
             }

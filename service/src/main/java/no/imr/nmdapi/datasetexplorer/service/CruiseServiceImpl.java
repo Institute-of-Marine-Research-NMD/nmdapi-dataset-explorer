@@ -13,8 +13,8 @@ public class CruiseServiceImpl implements CruiseService {
      @Autowired
     private CruiseDAO cruiseDAO;
 
-    public Object getCruisePath(String cruiseNR) {
-        return cruiseDAO.getCruiseByCruiseNR(cruiseNR);
+    public Object getCruisePath(String cruiseNR,String shipName) {
+        return cruiseDAO.getCruiseByCruiseNR(cruiseNR,shipName);
     }
     
 

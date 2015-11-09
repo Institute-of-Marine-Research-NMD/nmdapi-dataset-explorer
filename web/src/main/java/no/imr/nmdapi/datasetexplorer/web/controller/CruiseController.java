@@ -47,13 +47,13 @@ public class CruiseController {
      * 
      * @return
      */
-    @RequestMapping(value = "/Cruise/mapByNR/{cruiseNR}", method = RequestMethod.GET)
+    @RequestMapping(value = "/Cruise/mapByNR/{cruiseNR}/{shipName}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Object listCruiseSeries( @PathVariable(value = "cruiseNR") String cruiseNR) {
-        return cruiseService.getCruisePath(cruiseNR);
+    public Object listCruiseSeries( @PathVariable(value = "cruiseNR") String cruiseNR,
+            @PathVariable(value = "shipName") String shipName
+            ) {
+        return cruiseService.getCruisePath(cruiseNR,shipName);
     }
-
-
     
 }

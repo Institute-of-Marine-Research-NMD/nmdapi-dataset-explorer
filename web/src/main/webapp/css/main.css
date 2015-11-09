@@ -49,7 +49,7 @@ td.S_YES {
 
 
 td.Y_NO {
-    background:purple;
+    background:green;
 }
 
 td.L_NO {
@@ -65,15 +65,15 @@ td.UNKNOWN {
 }
 
 td.Y_UNKNOWN {
-    background:purple;
+    background:green;
 }
 
 td.L_UNKNOWN {
-    background:purple;
+    background:red;
 }
 
 td.S_UNKNOWN {
-    background:purple;
+    background:yellow;
 }
 
 

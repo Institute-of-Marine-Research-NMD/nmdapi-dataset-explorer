@@ -15,6 +15,7 @@ import no.imr.nmd.commons.cruiseseries.domain.v1.CruiseSerieType;
 import no.imr.nmd.commons.cruiseseries.domain.v1.CruiseSeriesType;
 import no.imr.nmd.commons.cruiseseries.domain.v1.CruiseType;
 import no.imr.nmd.commons.cruiseseries.domain.v1.SampleType;
+import no.imr.nmdapi.datasetexplorer.dao.pojo.ShipIdentifer;
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class CruiseSeriesDAOTaskImpl implements CruiseSeriesDAO {
     @Autowired
     private Configuration config;
 
-    private HashMap<String, ArrayList<String>> urlList;
+    private HashMap<String, ArrayList> urlList;
 
     public void updateCruiseSeries() {
         LOG.debug("Start update Cruise series");
@@ -42,10 +43,10 @@ public class CruiseSeriesDAOTaskImpl implements CruiseSeriesDAO {
         long used = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
         LOG.debug("Memory usage before update:"+used);
  
-        HashMap<String, ArrayList<String>> newUrlList = new HashMap< String, ArrayList<String>>();
+        HashMap<String, ArrayList> newUrlList = new HashMap< String, ArrayList>();
         ArrayList<String> yearList;
         String year;
-        ArrayList<String> cruiseNRList;
+        ArrayList<ShipIdentifer> cruiseNRList;
 
         File filePath = new File(config.getString("cruiseseries.base.filePath"));
         ArrayList<String> cruiseSeriesNameList = new ArrayList<String>();
@@ -71,10 +72,16 @@ public class CruiseSeriesDAOTaskImpl implements CruiseSeriesDAO {
                 for (SampleType sample : sampleList) {
                     year = sample.getSampleTime();
                     yearList.add(year);
-                    cruiseNRList = new ArrayList<String>();
+                    cruiseNRList = new ArrayList<ShipIdentifer>();
 
                     for (CruiseType cruise : sample.getCruises().getCruise()) {
-                        cruiseNRList.add(cruise.getCruisenr());
+                        ShipIdentifer shipID = new ShipIdentifer();
+                        shipID.setCruiseCode(cruise.getCruisenr());
+                        shipID.setShipName(cruise.getShipName());
+                        cruiseNRList.add(shipID);
+    //                  cruiseNRList.add(cruise.getCruisenr());
+                        
+                        
                     }
                     newUrlList.put(name + "/" + year, cruiseNRList);
                 }
@@ -83,7 +90,7 @@ public class CruiseSeriesDAOTaskImpl implements CruiseSeriesDAO {
                 newUrlList.put(name, yearList);
 
             } catch (JAXBException ex) {
-                ex.printStackTrace();
+                 LOG.error("CruiseSeries jaxb unmarshll error for file:" + filePath, ex);
                 //TODO handle this better
             }
 

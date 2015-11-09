@@ -7,7 +7,7 @@ package no.imr.nmdapi.datasetexplorer.service;
  */
 public interface CruiseService {
 
-    public Object getCruisePath(String cruiseNR);
+    public Object getCruisePath(String cruiseNR,String shipName);
 
     
 }

@@ -170,11 +170,9 @@ public class DatasetServiceImpl implements DatasetService {
         CruiseType cruise = cruiseDAO.getCruiseDetailByCruisePath(cruisePath);
         if (cruise != null) {
             result.incMissionCount();
-    //    result.incIdentifed();
 
-            //cruiseNR =cruise.getCruiseCode();
             for (DatasetType dataset : cruise.getDatasets().getDataset()) {
-                if (dataset.getCollected().equals(ExistsEnum.YES)) {
+                if (!dataset.getCollected().equals(ExistsEnum.NO)) {
                     result.incIdentifed();
                 }
             }
