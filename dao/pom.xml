@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.imr.nmdapi.client.dao</groupId>
     <artifactId>dataset-explorer</artifactId>
-  <version>0.0.7-SNAPSHOT</version>
+  <version>0.0.7</version>
   
     <packaging>jar</packaging>
     <name>DAO module - DatasetExplorer</name>
     <parent>
         <groupId>no.imr.nmdapi.client</groupId>
         <artifactId>dataset-explorer</artifactId>
-        <version>1.0.6-SNAPSHOT</version>
+        <version>1.0.6</version>
     </parent>
     
     <dependencies>
