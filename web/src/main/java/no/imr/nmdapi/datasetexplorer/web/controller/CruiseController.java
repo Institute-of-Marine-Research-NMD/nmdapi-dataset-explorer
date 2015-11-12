@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,15 +44,15 @@ public class CruiseController {
     
     
    /**
-     * List path for cruise nr
+     * List path for cruise code+ship name
      * 
      * @return
      */
-    @RequestMapping(value = "/Cruise/mapByNR/{cruiseNR}/{shipName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/Cruise/find", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Object listCruiseSeries( @PathVariable(value = "cruiseNR") String cruiseNR,
-            @PathVariable(value = "shipName") String shipName
+    public Object listCruiseSeries( @RequestParam(value = "cruiseCode") String cruiseNR,
+            @RequestParam(value = "shipName") String shipName
             ) {
         return cruiseService.getCruisePath(cruiseNR,shipName);
     }

@@ -37,11 +37,12 @@ $(document).ready(function () {
     var browseTree = $('#browseTree').jstree(true);
 
 
-    var callRest = function (path, success)
+    var callRest = function (path, success,param)
     {
         //  $.blockUI({ message: $('#waitMessage') }); 
         $.ajax({
             url: app.baseURL + path,
+            data:param,
             dataType: "json"
         }).done(function (data) {
             success(data);
@@ -95,7 +96,7 @@ $(document).ready(function () {
                             addCruiseSeriesCruises(data.node.id, path);
                             break;
                         case 4:
-                            addCruiseDatasets(data.node.id, orgNode.shipID);
+                            addCruiseDatasets(data.node.id, orgNode.cruiseCode,orgNode.shipName);
                             break;
                         case 5:
                     }
@@ -111,7 +112,7 @@ $(document).ready(function () {
                             addTimeSeriesDatasets(data.node.id, path);
                             break;
                         case 4:
-                            addCruiseDatasets(data.node.id, orgNode.shipID);
+                            addCruiseDatasets(data.node.id, orgNode.cruiseCode,orgNode.shipName);
                             break;
                     }
                 } else {
@@ -222,7 +223,7 @@ $(document).ready(function () {
             {
                 countText = data[i].cruiseCode;
                 browseTree.create_node(par, {text: countText, cruiseSeries: true,
-                    shipID: data[i].cruiseCode+"/" + data[i].shipName}
+                    cruiseCode: data[i].cruiseCode,shipName: data[i].shipName}
                 , 'last');
             }
             browseTree.open_node(par);
@@ -231,10 +232,9 @@ $(document).ready(function () {
 
 
 
-    var addCruiseDatasets = function (par, cruiseNR)
+    var addCruiseDatasets = function (par, cruiseCode,shipName)
     {
-        console.log(cruiseNR);
-        callRest("Cruise/mapByNR/" + cruiseNR, function (cruiseData) {
+        callRest("Cruise/find/", function (cruiseData) {
 
             callRest("list" + cruiseData, function (data) {
                 var dataSetText;
@@ -255,7 +255,7 @@ $(document).ready(function () {
                 browseTree.open_node(par);
 
             });
-        });
+        },{cruiseCode:cruiseCode,shipName:shipName});
     };
 
 
@@ -317,7 +317,7 @@ $(document).ready(function () {
             for (var i = 0; i < cruiseList.length; i++) {
                 cruiseNR = cruiseList[i].cruiseCode;
                 browseTree.create_node(par, {text: cruiseNR, cruiseSeries: true,
-                    shipID:cruiseList[i].cruiseCode + "/" + cruiseList[i].shipName}
+                    cruiseCode:cruiseList[i].cruiseCode,shipName:cruiseList[i].shipName}
                 , 'last');
 
             }
