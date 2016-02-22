@@ -3,6 +3,7 @@ $(document).ready(function () {
 
 
     app.cruiseDatasetNames = [];
+    
   
 
     app.baseURL = "../";
@@ -61,7 +62,7 @@ $(document).ready(function () {
     };
 
     callRest("listCruiseDatsetTypes", function (data) {
-        app.cruiseDatasetNames = data;
+        app.cruiseDatasetNames = data.filter(function(s) {return s != "CRUISE"});
     });
 
     //Setup expand node handling
@@ -81,7 +82,7 @@ $(document).ready(function () {
                 }
 
                 var path = orgNode.fullPath;
-                //    console.log(orgNode);
+   
                 if (orgNode.cruiseSeries) {
                     switch (data.node.parents.length) {
                         case 1:
@@ -205,7 +206,6 @@ $(document).ready(function () {
         callRest("CruiseSeries/list" + path, function (data) {
             for (var i = 0; i < data.length; i++)
             {
-                console.log(data[i])
                 browseTree.create_node(par, {text: data[i], cruiseSeries: true,
                     fullPath: path + "/" + data[i]}
                 , 'last');
@@ -241,7 +241,9 @@ $(document).ready(function () {
                 jQuery.each(data, function (name, value) {
                     if (value != "N/A")
                     {
-                        dataSetText = createDataLink(name, value);
+                        dataSetText = createProxyDownloadLink(name,value);
+       
+       //                 dataSetText = createDataLink(name,name+"_"+cruiseCode+".xml", value);
                     }
                     else
                     {
@@ -292,9 +294,8 @@ $(document).ready(function () {
                 , 'last');
 
                 addDatasetSummary(newNode, "SurveyTimeSeries/summary", path + "/" + data[i].sampleTime);
-
                 browseTree.create_node(newNode, {"type": "file", timeSeries: true,
-                    text: createDataLink("Stox",data[i].stoxURL), nop: true}
+                    text: createProxyDownloadLink("Stox", data[i].stoxURL), nop: true}
                 , 'last');
 
                 browseTree.create_node(newNode, {"type": "file", timeSeries: true,
@@ -335,10 +336,11 @@ $(document).ready(function () {
 
         callRest("list" + path, function (data) {
             var dataSetText;
+            var pathList;
             jQuery.each(data, function (name, value) {
                 if (value != "N/A")
                 {
-                    dataSetText = createDataLink(name, value);
+                   dataSetText = createProxyDownloadLink(name,value);
                 }
                 else
                 {
@@ -360,9 +362,10 @@ $(document).ready(function () {
     };
 
 
-    var createDataLink = function (name, value)
+    var createProxyDownloadLink = function (name, value)
     {
-         return   name + " <a class='dataLink' href='" + value + "' onClick='javascript:app.showData(event)'>Link</a>";
+        var proxyURL =     app.baseURL + "SimpleFetch?src="+encodeURIComponent(value);
+         return   name + " <a class='dataLink' href='" + proxyURL + "' title='"+name+"' onClick='javascript:app.showData(event)'>Link</a>";
     };
 
     app.showSummary = function (url, path) {
@@ -372,10 +375,13 @@ $(document).ready(function () {
             var head = $("<tr class='summaryHeader' >");
             head.append("<th class='summaryHead' >Cruise Code</th>");
             for (var i = 0; i < app.cruiseDatasetNames.length; i++) {
-                head.append("<th class='summaryHead' >" + app.cruiseDatasetNames[i] + "</th>");
+                head.append("<th class='summaryHead' >" +
+                        app.cruiseDatasetNames[i].charAt(0) +
+                        app.cruiseDatasetNames[i].substring(1).toLowerCase()+
+                        "</th>");
             }
             sumTable.append(head);
-
+ 
 
             jQuery.each(data, function (index, value) {
                 var row = $("<tr class='summaryRow' >");
@@ -426,16 +432,12 @@ $(document).ready(function () {
 
     app.showData = function (ev) {
         var dataUrl = ev.srcElement.href;
+        var dialogTitle = ev.srcElement.title;
         $.ajax({
-            url: dataUrl,
+            url: dataUrl.replace(/Simple/,"Partial")+"&length=5000",
             dataType: "text"
         }).done(function (data) {
-            //Truncate xml if too big for display
-            if (data.length > 50000) {
-                data = data.substring(0, 50000)
-            }
-            ;
-            //Then indent xml
+            //Indent xml
             data = vkbeautify.xml(data);
             //Then escape xml
             data = data.replace(/&/g, '&amp;')
@@ -443,9 +445,11 @@ $(document).ready(function () {
                     .replace(/>/g, '&gt;')
                     .replace(/"/g, '&quot;')
                     .replace(/'/g, '&apos;');
+            
+            
             //Create dialog
             var dialog = $("<div>").
-                    html("<a href = '" + dataUrl + "' download = 'data.xml' >Download xml</a>" +
+                    html("<a href = '" + dataUrl + "' >Download xml</a>" +
                             "<pre class='prettyprint'>"
                             + data + "</pre>")
                     .dialog({
@@ -460,7 +464,7 @@ $(document).ready(function () {
                             of: window,
                             collision: "none"
                         },
-                        title: "Data.xml",
+                        title: dialogTitle,
                         buttons: {
                             "Ok": function ()
                             {
