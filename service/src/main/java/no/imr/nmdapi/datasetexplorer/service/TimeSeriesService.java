@@ -22,5 +22,7 @@ public interface TimeSeriesService {
     public List summarizeDatasetsStatus(String surveyTimeSeriesName, String period);
   
      public List summarizeDatasetsStatus(String surveyTimeSeriesName);
+     
+     public String getStoxPath(String stoxID);
   
 }

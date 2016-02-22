@@ -74,5 +74,7 @@ public class TimeSeriesServiceImpl implements TimeSeriesService {
         return result;
     }
 
-    
+    public String getStoxPath(String stoxID) {
+        return surveyTimeSeriesDAO.getStoxPath(stoxID);
+    }
 }
