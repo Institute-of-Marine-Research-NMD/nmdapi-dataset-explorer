@@ -29,10 +29,7 @@ public class CamelConfig extends SingleRouteCamelConfiguration{
         
          return new RouteBuilder() {
             public void configure() {
-//                CronScheduledRoutePolicy startPolicy = new CronScheduledRoutePolicy();
-//                startPolicy.setRouteStartTime(config.getString("cron.activation.time"));
-//                
-//                 from("timer://runOnce?repeatCount=1&delay=5000").routePolicy(startPolicy)
+
                          
                 onException(Exception.class)
                         .handled(true) 
