@@ -34,6 +34,8 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
     private Configuration config;
 
     private HashMap<String, ArrayList<String>> urlList;
+    private HashMap<String, String> stoxUrlPathMap = new HashMap< String,String>();
+
     HashMap<String, ArrayList<SurveyTimeSeriesSample>> sampleTimeMap = new HashMap< String, ArrayList<SurveyTimeSeriesSample>>();
     HashMap<String, ArrayList<String>> samplePeriodMap = new HashMap< String, ArrayList<String>>();
     
@@ -50,6 +52,7 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
         HashMap<String, ArrayList<String>> newUrlList = new HashMap< String, ArrayList<String>>();
         HashMap<String, ArrayList<SurveyTimeSeriesSample>> newSampleList = new HashMap< String, ArrayList<SurveyTimeSeriesSample>>();
         HashMap<String, ArrayList<String>> newSamplePeriodList = new HashMap< String, ArrayList<String>>();
+        HashMap<String, String> newStoxUrlPathMap = new HashMap< String,String>();
         
         
         File filePath = new File(config.getString("timeseries.base.filePath") );
@@ -80,6 +83,7 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
                     sampleList.add(sample);
                     periodList.add(surveySample.getSampleTime());
                     
+                    newStoxUrlPathMap.put(surveySample.getStoxProjectId(), name+"/"+surveySample.getSampleTime());
                     
                 }
 
@@ -102,7 +106,7 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
         urlList = newUrlList;
         sampleTimeMap = newSampleList;
         samplePeriodMap = newSamplePeriodList;
-
+        stoxUrlPathMap = newStoxUrlPathMap;
         LOG.debug("End update");
     }
 
@@ -122,6 +126,9 @@ public class SurveyTimeSeriesDAOTaskImpl implements SurveyTimeSeriesDAO {
         return urlList.get(surveyTimeSeriesName);
     }
 
+    public String getStoxPath(String stoxID) {
+        return stoxUrlPathMap.get(stoxID);
+    }
     
     
 

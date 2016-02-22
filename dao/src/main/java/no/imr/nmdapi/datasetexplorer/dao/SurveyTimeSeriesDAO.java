@@ -16,6 +16,6 @@ public interface SurveyTimeSeriesDAO {
         
     public Collection<String> listCruisesSeries(String surveyTimeSeriesName) ;
     
-    
+    public String getStoxPath(String stoxID);
 
 }
