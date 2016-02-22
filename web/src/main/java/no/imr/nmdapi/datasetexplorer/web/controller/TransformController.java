@@ -4,19 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import no.imr.nmdapi.datasetexplorer.service.TimeSeriesService;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,9 +26,7 @@ public class TransformController {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(TransformController.class);
 
     final int BUFFER_SIZE = 1024 * 4;
-    @Autowired
-    HttpClient httpClient;
-
+    
     @Autowired
     private TimeSeriesService timeSeriesService;
 
