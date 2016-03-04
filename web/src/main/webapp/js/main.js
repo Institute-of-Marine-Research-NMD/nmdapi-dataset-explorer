@@ -60,6 +60,39 @@ $(document).ready(function () {
             });
         });
     };
+    
+    //Hidden cache reloader
+    $("#s2dlogo").click(function(e) {
+         if(e.ctrlKey) {
+             console.log("Shhhh lets Refresh");
+             $("<div>").html("Cache reload queued").dialog({
+                modal: true,
+                buttons: {
+                    "Ok": function ()
+                    {
+                        $(this).dialog("close");
+                    }
+                }}) ;
+
+             
+                 $.ajax({
+            url: app.baseURL + "cacheReload"
+        }).done(function (data) {
+           console.log("Boom!");
+                   $("<div>").html("Cache reload complete").dialog({
+                modal: true,
+                buttons: {
+                    "Ok": function ()
+                    {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+        });
+             
+         }
+      });
 
     callRest("listCruiseDatsetTypes", function (data) {
         app.cruiseDatasetNames = data.filter(function(s) {return s != "CRUISE"});
@@ -374,6 +407,7 @@ $(document).ready(function () {
             var sumTable = $("<table class='summaryTable'>");
             var head = $("<tr class='summaryHeader' >");
             head.append("<th class='summaryHead' >Cruise Code</th>");
+            head.append("<th class='summaryHead' >Stop date</th>");
             for (var i = 0; i < app.cruiseDatasetNames.length; i++) {
                 head.append("<th class='summaryHead' >" +
                         app.cruiseDatasetNames[i].charAt(0) +
@@ -387,6 +421,7 @@ $(document).ready(function () {
                 var row = $("<tr class='summaryRow' >");
                 var cellClass;
                 row.append("<td class=' cruisecode' >" + value.delivery + " " + value.platform + "</td>");
+                row.append("<td class='stopDate' >" + value.stopDate+ "</td>");
 
                 for (var i = 0; i < app.cruiseDatasetNames.length; i++) {
                     if (value.loaded[app.cruiseDatasetNames[i]]) {  // Do we know anything about dataset
