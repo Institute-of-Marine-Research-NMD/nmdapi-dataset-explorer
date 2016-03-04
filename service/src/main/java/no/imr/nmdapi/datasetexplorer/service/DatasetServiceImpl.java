@@ -1,13 +1,18 @@
 package no.imr.nmdapi.datasetexplorer.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections4.iterators.IteratorIterable;
+
 import no.imr.nmd.commons.cruise.jaxb.CruiseType;
 import no.imr.nmd.commons.cruise.jaxb.DatasetType;
 import no.imr.nmd.commons.cruise.jaxb.ExistsEnum;
@@ -16,6 +21,8 @@ import no.imr.nmdapi.datasetexplorer.dao.DatasetDAO;
 import no.imr.nmdapi.datasetexplorer.service.beans.CruiseDatasetStatus;
 import no.imr.nmdapi.datasetexplorer.service.beans.ImportCount;
 import no.imr.nmdapi.datasetexplorer.service.beans.Level;
+import org.apache.commons.collections4.iterators.EmptyIterator;
+import org.apache.commons.collections4.iterators.SingletonIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -252,20 +259,20 @@ public class DatasetServiceImpl implements DatasetService {
     }
 
     @Override
-    public  CruiseDatasetStatus getCruiseStatus(String cruisePath) {
-            
+    public CruiseDatasetStatus getCruiseStatus(String cruisePath) {
+
         CruiseDatasetStatus result = null;
         String[] parts = cruisePath.split("/");
-        if (parts.length == 5 ) {
-            result = getCruiseStatus(parts[1], parts[2],parts[3],parts[4]);
+        if (parts.length == 5) {
+            result = getCruiseStatus(parts[1], parts[2], parts[3], parts[4]);
         }
         return result;
     }
-    
-    
-   @Override
-    public  CruiseDatasetStatus getCruiseStatus(String missionType, String year, String platform, String delivery) {
-       
+
+    @Override
+    public CruiseDatasetStatus getCruiseStatus(String missionType, String year, String platform, String delivery) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         CruiseDatasetStatus result = null;
         GregorianCalendar monthAgo = new GregorianCalendar();
         monthAgo.add(Calendar.MONTH, -1);
@@ -275,6 +282,7 @@ public class DatasetServiceImpl implements DatasetService {
             result = new CruiseDatasetStatus();
             result.setDelivery(delivery);
             result.setPlatform(platform);
+            result.setStopDate(dateFormat.format(cruise.getStopTime().toGregorianCalendar().getTime()));
 
             for (DatasetType dataset : cruise.getDatasets().getDataset()) {
                 result.setExistsStatus(dataset.getDataType().name(), dataset.getCollected().name());
@@ -292,6 +300,77 @@ public class DatasetServiceImpl implements DatasetService {
                 }
             }
         }
+        return result;
+    }
+
+    public List listDatasets(String missionType, String year, String platform, String delivery, String datatype,
+            String cruiseNumber, String status) {
+
+        ArrayList result = new ArrayList();
+
+        Iterable<String> missionTypes, years, platforms, deliveries, datatypes;
+
+        if (missionType == null) {
+            missionTypes = listMissionTypes();
+        } else {
+            missionTypes = new IteratorIterable(new SingletonIterator(missionType));
+        }
+
+        for (String currentMissionType : missionTypes) {
+            if (year == null || year.isEmpty()) {
+                years = listYears(currentMissionType);
+                if (years == null) {
+                    years = new IteratorIterable(EmptyIterator.emptyIterator());
+                }
+
+            } else {
+                years = new IteratorIterable(new SingletonIterator(year));
+            }
+            for (String currentYear : years) {
+                LOGGER.debug("check " + currentMissionType + "/" + currentYear + "/");
+
+                if (platform == null) {
+                    platforms = listPlatforms(currentMissionType, currentYear);
+                    if (platforms == null) {
+                        platforms = new IteratorIterable(EmptyIterator.emptyIterator());
+                    }
+
+                } else {
+                    platforms = new IteratorIterable(new SingletonIterator(platform));
+                }
+                for (String currentPlatform : platforms) {
+                    if (delivery == null) {
+                        deliveries = listDeliveries(currentMissionType, currentYear, currentPlatform);
+                        if (deliveries == null) {
+                            deliveries = new IteratorIterable(EmptyIterator.emptyIterator());
+                        }
+
+                    } else {
+                        deliveries = new IteratorIterable(new SingletonIterator(delivery));
+                    }
+                    for (String currentDelivery : deliveries) {
+                        //Now for additional checks
+                        LOGGER.debug("check " + currentMissionType + "/" + currentYear + "/" + currentPlatform + "/" + currentDelivery);
+
+                        Map datasets = datasetDAO.listExistingDatasetsDetail(currentMissionType, currentYear, currentPlatform, currentDelivery);
+
+                        for (Object dataset : datasets.keySet()) {
+
+                            HashMap match = new HashMap();
+                            match.put("missionType", currentMissionType);
+                            match.put("year", currentYear);
+                            match.put("platform", currentPlatform);
+                            match.put("delivery", currentDelivery);
+                            match.put("dataset", dataset);
+    //                    match.put("missionType", currentMissionType);
+                            //                     match.put("missionType", currentMissionType);
+                            result.add(match);
+                        }
+                    }
+                }
+            }
+        }
+
         return result;
     }
 
