@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import no.imr.nmdapi.common.jaxb.converters.JAXBHttpMessageConverter;
+import no.imr.nmdapi.datasetexplorer.dao.CacheControl;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseDAOTaskImpl;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseSeriesDAO;
 import no.imr.nmdapi.datasetexplorer.dao.CruiseSeriesDAOTaskImpl;
@@ -168,6 +169,12 @@ public class DatasetDAOConfig {
 
     
 
+      @Bean
+      public CacheControl getCacheControl() {
+          return new CacheControl();
+      }
+       
+    
     
     
    
