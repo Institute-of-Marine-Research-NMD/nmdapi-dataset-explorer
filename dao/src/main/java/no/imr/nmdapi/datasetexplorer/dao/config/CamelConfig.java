@@ -37,6 +37,7 @@ public class CamelConfig extends SingleRouteCamelConfiguration{
                 
                 
                  from("quartz://cacheRefresh?cron="+UnsafeUriCharactersEncoder.encode(config.getString("cron.activation.time")))
+                 .from("direct://reloadAll")
                  .from("timer://runOnce?repeatCount=1&delay=5000")
                             .to("bean:datasetDAO?method=updateDataset")
                             .to("bean:cruiseSeriesDAO?method=updateCruiseSeries")
