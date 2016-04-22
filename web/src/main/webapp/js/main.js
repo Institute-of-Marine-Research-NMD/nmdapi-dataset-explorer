@@ -2,6 +2,8 @@ var app = {};
 $(document).ready(function () {
 
 
+    app.baseCruiseNames={"Forskningsfartøy":true,"Leiefartøy":true};
+    
     app.cruiseDatasetNames = [];
     
   
@@ -156,7 +158,8 @@ $(document).ready(function () {
                             addDatasetSummary(data.node.id, "statusByCruise", path);
                             addChildrenWithCount(data.node.id, path);
                             break;
-                        case 1:
+                    case 1:
+    	break;
                         case 2:
                         case 4:
                             addChildrenWithCount(data.node.id, path);
@@ -174,12 +177,42 @@ $(document).ready(function () {
             }
     );
 
-    var initData = callRest("countAll", function (data) {
+    var initData = callRest("count", function (data) {
 
+	var  identified=0;
+	var  loaded=0;
+	var  missionCount=0
 
-        browseTree.create_node("#", {text: formatCount("Cruise", data),
-            fullPath: "/"},
-        "first");
+	var baseCruises={identified:0,loaded:0};
+	var otherCruises={identified:0,loaded:0}; 
+	var cruises;
+
+	var cruiseRoot = browseTree.create_node("#", {fullPath: "/"}, "first");
+	var otherCruiseRoot = browseTree.create_node("#", {fullPath: "/"}, "last");
+	
+	for (var i = 0; i < data.length; i++) {
+	    if (app.baseCruiseNames[data[i].name]) {
+		cruises=baseCruises;
+		browseTree.create_node(cruiseRoot, {text: formatCount(data[i].name, data[i].count),
+						    fullPath: data[i].parentPath + data[i].name});
+
+	    } else {
+		cruises=otherCruises;
+		browseTree.create_node(otherCruiseRoot, {text: formatCount(data[i].name, data[i].count),
+						    fullPath: data[i].parentPath + data[i].name});
+	    }
+	    
+	    identified += data[i].count.identified;
+	    cruises.identified += data[i].count.identified;
+	    loaded += data[i].count.loaded;
+	    cruises.loaded += data[i].count.loaded;
+	    missionCount += data[i].count.missionCount;
+	    cruises.missionCount += data[i].count.missionCount;
+	}
+
+	browseTree.rename_node(cruiseRoot,formatCount("Cruise", baseCruises));
+	browseTree.rename_node(otherCruiseRoot,formatCount("Commercial sampling", otherCruises));
+	
         browseTree.create_node("#", {text: "Cruise series", cruiseSeries: true,
             fullPath: "/"},
         "last");
@@ -187,22 +220,22 @@ $(document).ready(function () {
             fullPath: "/"},
         "last");
 
-        var statPercent = Math.round(data.loaded / data.identified * 100.0);
+        var statPercent = Math.round(loaded / identified * 100.0);
         $('<div/>', {
             "data-type": "half",
             "data-fgcolor": "#61a9dc",
             "data-fill": "#ddd",
-            "data-total": data.identified,
-            "data-part": data.loaded,
+            "data-total": identified,
+            "data-part": loaded,
             "data-text": statPercent + "%",
             "data-info": "Datasets loaded",
             id: "allStatDial"
         }).appendTo('#totalStatus');
         $('#allStatDial').circliful();
 
-        $('#totalStatusMessage1').html("Datasets loaded: " + data.loaded);
-        $('#totalStatusMessage2').html("Datasets identified: " + data.identified);
-        $('#totalStatusMessage3').html("Cruise count: " + data.missionCount);
+        $('#totalStatusMessage1').html("Datasets loaded: " + loaded);
+        $('#totalStatusMessage2').html("Datasets identified: " + identified);
+        $('#totalStatusMessage3').html("Cruise count: " + missionCount);
 
 
     });
