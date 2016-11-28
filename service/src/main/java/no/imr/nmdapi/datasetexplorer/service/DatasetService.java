@@ -42,8 +42,9 @@ public interface DatasetService {
     
     CruiseDatasetStatus getCruiseStatus(String cruisePath) ;
     
+    List listDatasets(String missionType, String year, String platform, String delivery,String datatype,
+                            String cruiseNumber,String status);
     
-  
     Collection listCruiseDatasetTypes();
             
     Object countAllDataSets();

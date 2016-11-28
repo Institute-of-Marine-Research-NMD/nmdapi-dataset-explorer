@@ -3,6 +3,7 @@ package no.imr.nmdapi.datasetexplorer.dao;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import no.imr.nmd.commons.dataset.jaxb.DatasetType;
 
 /**
  *
@@ -76,6 +77,7 @@ public interface DatasetDAO {
      public  boolean checkDatasetFileExists(String missionType, String year, String platform, String delivery,String dataType);
  
      
+     public DatasetType getDatasetDetail(String path);
      
      public List listDatasetNames();
      

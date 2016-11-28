@@ -42,7 +42,8 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
     private HashMap<String, ArrayList<String>> urlList;
     private HashSet<String> fileExistsDatasets;
     private ArrayList<String> datasetNames;
-
+    private HashMap<String, DatasetType> datasetMap;
+ 
     public void updateDataset() {
         LOG.debug("Start update dataset");
           Runtime rt = Runtime.getRuntime();
@@ -50,6 +51,8 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
          LOG.debug("Memory usage before update:"+used);
     
         HashMap<String, ArrayList<String>> newUrlList = new HashMap< String, ArrayList<String>>();
+        HashMap<String, DatasetType> newDatasetMap = new HashMap< String,DatasetType>();
+        
         HashSet<String> newFileExistsDatasets = new HashSet<String>();
         String currentPath,datasetFilePath;
 
@@ -83,23 +86,31 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
                      for (String delivery : deliveries) {
                         currentPath = expand(File.separator, missionType, year, platform,delivery);
            
-                        ArrayList<String> datasets = getLoadedDatasets(missionType, year, platform, delivery);
-                        newUrlList.put(currentPath, datasets);
+                        ArrayList<DatasetType> datasetsList = getLoadedDatasets(missionType, year, platform, delivery);
                         
-                        for (String dataset:datasets){
-                                 currentPath = expand(File.separator, missionType, year, platform, delivery, dataset.toLowerCase());
+                        ArrayList<String> datasets = new ArrayList<String>(datasetsList.size());
+                        
+                        
+                        for (DatasetType datasetDetail:datasetsList){
+                                 datasets.add(datasetDetail.getDataType().name().toLowerCase());
+                                 currentPath = expand(File.separator, missionType, year, platform, delivery, datasetDetail.getDataType().name().toLowerCase());
+                                 newDatasetMap.put(currentPath, datasetDetail);
+                                 
                                  datasetFilePath = config.getString("base.filePath") + currentPath + "data.xml";
                                  File path = new File(datasetFilePath);
                                  if (path.exists()){
                                      newFileExistsDatasets.add(currentPath);
                                  }
+                                 
                         }
+                       newUrlList.put(currentPath, datasets);
                     }
                 }
             }
         }
         urlList = newUrlList;
         fileExistsDatasets = newFileExistsDatasets;
+        datasetMap = newDatasetMap;
         
       used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
        LOG.debug("Memory usage after update:"+used);
@@ -128,21 +139,26 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
          return urlList.get(expand(File.separator, missionType,year,platform,delivery));
     }
     
+    public DatasetType getDatasetDetail(String path) {
+        return datasetMap.get(path);
+    }
+    
     /*
-     * Get datasets that are listed in cruise dataset data.xml
+     * Get datasets that are listed in  dataset data.xml
     */
-    private ArrayList<String> getLoadedDatasets(String missionType, String year, String platform, String delivery) {
+    private ArrayList<DatasetType> getLoadedDatasets(String missionType, String year, String platform, String delivery) {
         
       String filePath = config.getString("base.filePath") + expand(File.separator, missionType, year, platform, delivery) + "data.xml";
         File path = new File(filePath);
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<DatasetType> result = new ArrayList<DatasetType>();
         DatasetsType datasets;
  
         try {
             datasets = (DatasetsType) JAXBIntrospector.getValue(datasetUnMarshaller.unmarshal(path));
-            result = new ArrayList<String>();
+            result = new ArrayList<DatasetType>();
             for (DatasetType datasetDetail : datasets.getDataset()) {
-                result.add(datasetDetail.getDataType().name().toLowerCase());
+                result.add(datasetDetail);
+//                result.add(datasetDetail.getDataType().name().toLowerCase());
             }
         } catch (JAXBException ex) {
             new NotFoundException(filePath + " not found ."); //TODO handle this better

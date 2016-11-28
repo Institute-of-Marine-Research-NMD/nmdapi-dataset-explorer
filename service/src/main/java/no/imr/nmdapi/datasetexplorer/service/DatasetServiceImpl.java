@@ -282,20 +282,26 @@ public class DatasetServiceImpl implements DatasetService {
             result = new CruiseDatasetStatus();
             result.setDelivery(delivery);
             result.setPlatform(platform);
-            result.setStopDate(dateFormat.format(cruise.getStopTime().toGregorianCalendar().getTime()));
-
+            if (cruise.getStopTime() !=null) {
+                result.setStopDate(dateFormat.format(cruise.getStopTime().toGregorianCalendar().getTime()));
+            }
             for (DatasetType dataset : cruise.getDatasets().getDataset()) {
                 result.setExistsStatus(dataset.getDataType().name(), dataset.getCollected().name());
                 if (checkDatasetFileExists(missionType, year, platform, delivery, dataset.getDataType().name().toLowerCase())) {
                     result.setLoadedStatus(dataset.getDataType().name(), "Y");
                 } else {
                     //Hacky hand coding of status values
+                    if (cruise.getStopTime() != null ) {
                     if (cruise.getStopTime().toGregorianCalendar().after(monthAgo)) {
                         //Cruise stopped less than month ago
                         result.setLoadedStatus(dataset.getDataType().name(), "S");
                     } else {
                         result.setLoadedStatus(dataset.getDataType().name(), "L");
                     }
+                    }   else {
+                        LOGGER.info("Cruise missing stop time:"+cruise.getCruiseCode()+":"+"/" + missionType + "/" + year + "/" + platform + "/" + delivery + "/");
+                    }
+                        
 
                 }
             }
