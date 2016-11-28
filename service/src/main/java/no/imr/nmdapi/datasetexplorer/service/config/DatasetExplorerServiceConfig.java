@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import no.imr.nmdapi.common.jaxb.converters.JAXBHttpMessageConverter;
+import no.imr.nmdapi.datasetexplorer.service.CacheService;
 import no.imr.nmdapi.datasetexplorer.service.CruiseSeriesService;
 import no.imr.nmdapi.datasetexplorer.service.CruiseSeriesServiceImpl;
 import no.imr.nmdapi.datasetexplorer.service.CruiseService;
@@ -78,6 +79,11 @@ public class DatasetExplorerServiceConfig {
           return new TimeSeriesServiceImpl();
     }
  
+    
+    @Bean
+    public CacheService cacheService() {
+        return new CacheService();
+    }
     
     /**
      * Create messages converters to be used
