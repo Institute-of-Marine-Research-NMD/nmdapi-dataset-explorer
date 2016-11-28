@@ -4,11 +4,11 @@
     <parent>
       <groupId>no.imr.nmdapi.client</groupId>
       <artifactId>dataset-explorer</artifactId>
-        <version>1.0.8-SNAPSHOT</version>
+        <version>1.0.8</version>
      </parent>
     <groupId>no.imr.nmdapi.client.service</groupId>
     <artifactId>dataset-explorer</artifactId>
-  <version>0.0.9-SNAPSHOT</version>
+  <version>0.0.9</version>
     <packaging>jar</packaging>
     <name>Service module - DatasetExplorer</name>
     <dependencies>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>no.imr.nmdapi.client.dao</groupId>
             <artifactId>dataset-explorer</artifactId>
-            <version>0.0.9-SNAPSHOT</version>
+            <version>0.0.9</version>
             <type>jar</type>
         </dependency>
 
