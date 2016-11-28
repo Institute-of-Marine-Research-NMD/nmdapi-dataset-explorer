@@ -209,5 +209,10 @@ public class DatasetDAOHybridImpl implements DatasetDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public no.imr.nmd.commons.dataset.jaxb.DatasetType getDatasetDetail(String path) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }
