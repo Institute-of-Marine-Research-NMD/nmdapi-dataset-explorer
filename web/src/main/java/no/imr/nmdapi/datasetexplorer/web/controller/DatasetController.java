@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,46 +29,6 @@ public class DatasetController {
     @Autowired private DatasetService datasetService;
        
     
-    /**
-     * Simple ping to test if system is up
-     * 
-     * @return 
-     */
-    @RequestMapping("/ping")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public String ping() {
-        return ("ping ");
-       }
-  
-    /**
-     * Simple mem stat
-     * 
-     * @return 
-     */
-    @RequestMapping("/mem")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public String memStat() {
-    Runtime rt = Runtime.getRuntime();
-    long used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-    return String.valueOf(used);
-}  
-    
-    /**
-     * Simple mem stat after gc
-     * 
-     * @return 
-     */
-    @RequestMapping("/gcmem")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public String gcMemStat() {
-        System.gc();
-    Runtime rt = Runtime.getRuntime();
-    long used  = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-    return String.valueOf(used);
-}  
     
     /** 
      * *General exception handler
@@ -78,7 +39,7 @@ public class DatasetController {
       @ExceptionHandler(Exception.class)
       @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)    
       public void handleError(HttpServletRequest request, Exception exception) {
-     LOGGER.error("Request: " + request.getRequestURL() + " raised " + exception);
+     LOGGER.error("Request: " + request.getRequestURL() + " raised " + exception,exception);
    }
    
       
@@ -259,6 +220,17 @@ public class DatasetController {
         return datasetService.listCruiseDatasetTypes();
     }
 
+    @RequestMapping(value = "/findDataset", method = RequestMethod.GET)
+    public Object findDatasets(@RequestParam(value = "missiontype", required = false) String missionType,
+                @RequestParam(value = "year", required = false) String year,
+                @RequestParam(value = "platform", required = false) String platform,
+                @RequestParam(value = "delivery", required = false) String delivery) {
+        
+        return datasetService.listDatasets(missionType, year, platform, delivery,null,null,null);
+        
+    }
+  
+    
     
 }
  

@@ -91,7 +91,7 @@
                         <version>2.3</version>
                         <configuration>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
-                            <outputDirectory>/app/datasetExplorer/webapps</outputDirectory>
+                            <outputDirectory>/arc/tap/datasetExplorer/webapps</outputDirectory>
                         </configuration>
                     </plugin>
                 </plugins>
