@@ -47,7 +47,9 @@ public class TransformController {
                 IOUtils.copy(input, response.getOutputStream());
                 input.close();
             } catch (IOException ex) {
-                LOG.error("Error proxying " + sourceURL);
+                LOG.error("Error proxying " + sourceURL,ex);
+                
+                
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         } else {
@@ -126,7 +128,7 @@ public class TransformController {
     private HttpURLConnection createProxyRequest(String requestURL) {
         HttpURLConnection result = null;
         try {
-            URL url = new URL(requestURL);
+            URL url = new URL(requestURL.replace(" ", "%20"));
             result = (HttpURLConnection) url.openConnection();
         } catch (MalformedURLException ex) {
             LOG.error("Incorrect url syntax", ex);
