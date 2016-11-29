@@ -16,6 +16,7 @@ import no.imr.nmd.commons.dataset.jaxb.DatasetType;
 import no.imr.nmd.commons.dataset.jaxb.DatasetsType;
 import no.imr.nmdapi.exceptions.NotFoundException;
 import org.apache.commons.configuration.Configuration;
+import org.apache.log4j.helpers.LogLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
 
         ArrayList<String> missionTypes = fileList("");
        Collections.sort(missionTypes);
-
+ 
         newUrlList.put("", missionTypes);
 
         for (String missionType : missionTypes) {
@@ -84,7 +85,7 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
                     newUrlList.put(currentPath, deliveries);
 
                      for (String delivery : deliveries) {
-                        currentPath = expand(File.separator, missionType, year, platform,delivery);
+                       String  deliveryPath = expand(File.separator, missionType, year, platform,delivery);
            
                         ArrayList<DatasetType> datasetsList = getLoadedDatasets(missionType, year, platform, delivery);
                         
@@ -103,7 +104,7 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
                                  }
                                  
                         }
-                       newUrlList.put(currentPath, datasets);
+                       newUrlList.put(deliveryPath, datasets);
                     }
                 }
             }
@@ -136,7 +137,7 @@ public class DatasetDAOTaskImpl implements DatasetDAO {
     }
 
     public Collection listExistingDatasets(String missionType, String year, String platform, String delivery) {
-         return urlList.get(expand(File.separator, missionType,year,platform,delivery));
+           return urlList.get(expand(File.separator, missionType,year,platform,delivery));
     }
     
     public DatasetType getDatasetDetail(String path) {
