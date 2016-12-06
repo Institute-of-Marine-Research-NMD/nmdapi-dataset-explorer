@@ -71,17 +71,12 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
 
                                 CruiseType cruise = (CruiseType) JAXBIntrospector.getValue(cruiseUnMarshaller.unmarshal(filePath));
                                 ShipIdentifer shipID = new ShipIdentifer();
+                                
+                                
 
                                 shipID.setCruiseCode(cruise.getCruiseCode());
-                                for (PlatformType platformInfo:cruise.getPlatformInfo().getPlatform()) {
-                                    
-                                    if (platformInfo.getType().equals("Ship_Name")) {
-                                       shipID.setShipName(platformInfo.getValue());
-                                    }
-                                }
+                                shipID.setShipName(platform.split("-")[0]);
                                 
-                                
-        //                            newCruisePathMap.put(cruise.getCruiseCode(), "/" + expand("/", missionType, year, platform, delivery));
                                 newCruisePathMap.put(shipID, "/" + expand("/", missionType, year, platform, delivery));
                                 
                                 
@@ -112,7 +107,7 @@ public class CruiseDAOTaskImpl implements CruiseDAO {
         String result = "";
         ShipIdentifer shipID = new ShipIdentifer();
         shipID.setCruiseCode(cruiseNR);
-        shipID.setShipName(shipName);
+        shipID.setShipName(shipName.replace("."," "));
 
         if (cruisePathMap.containsKey(shipID)) {
             result = cruisePathMap.get(shipID);
