@@ -4,11 +4,11 @@
     <parent>
         <groupId>no.imr.nmdapi.client</groupId>
         <artifactId>dataset-explorer</artifactId>
-        <version>1.0.10</version>
+        <version>1.0.11-SNAPSHOT</version>
     </parent>
     <groupId>no.imr.nmdapi.client.web</groupId>
     <artifactId>datset-explorer</artifactId>
-  <version>0.0.11</version>
+  <version>0.0.12-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Web module - Dataset Explorer</name>
     <dependencies>
